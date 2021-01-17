@@ -10,9 +10,10 @@ import kotlin.time.toDuration
  * @return mountStatus: Boolean
  */
 @OptIn(ExperimentalTime::class)
-public actual fun mountDir(dirName: String): Boolean {
+public actual fun mountDir(dirName: String, userName: String, password: String): Boolean {
 	var ok = false
-	system("mount | grep \"on $dirName \"", 5.toDuration(DurationUnit.SECONDS)) { line, lineFrom, _ ->
+	TODO("implement with net use")
+	system("net use | grep \"on $dirName \"", 5.toDuration(DurationUnit.SECONDS)) { line, lineFrom, _ ->
 		val msgId = if (lineFrom == LineFrom.OUT) 'I' else 'E'
 		logMessage(msgId, "mountDir1> $line")
 		if (line.contains("on $dirName ")) ok = true
@@ -20,7 +21,7 @@ public actual fun mountDir(dirName: String): Boolean {
 	if (ok) return true // dirName is already mounted
 
 	ok = false
-	system("mount $dirName; sleep 1; mount | grep \"on $dirName \"", 300.toDuration(DurationUnit.SECONDS)) { line, lineFrom, _ ->
+	system("net use $dirName; sleep 1; net use | grep \"on $dirName \"", 300.toDuration(DurationUnit.SECONDS)) { line, lineFrom, _ ->
 		val msgId = if (lineFrom == LineFrom.OUT) 'I' else 'E'
 		logMessage(msgId, "mountDir2> $line")
 		if (line.contains("on $dirName ")) ok = true

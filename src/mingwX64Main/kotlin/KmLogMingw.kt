@@ -31,7 +31,7 @@ public actual fun closeFile(fileHandle: Int): Int {
 }
 
 public actual fun printFile(fileHandle: Int, text: String): Long {
-	return write(fileHandle, text.cstr, text.length.toULong())
+	return write(fileHandle, text.cstr, text.length.toUInt()).toLong()
 }
 
 public actual  fun getTimeMillis(): Long = time(null) * 1000L // getTimeMillis()

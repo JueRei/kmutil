@@ -10,4 +10,4 @@ import kotlin.time.toDuration
  * @return mountStatus: Boolean
  */
 @OptIn(ExperimentalTime::class)
-public expect fun mountDir(dirName: String): Boolean
+public expect fun mountDir(dirName: String, userName: String = "", password: String = ""): Boolean

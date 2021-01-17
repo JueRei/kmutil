@@ -1,4 +1,4 @@
-# Kotlin multi-platform utilities for scripts and commandline utilities
+# Kotlin multi-platform utilities for scripts and command line utilities
 Provide some useful classes and functions for Kotlin multiplatform utilities 
 Based on de.rdvsb.kmapi
 
