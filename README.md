@@ -39,5 +39,5 @@ Based on de.rdvsb.kmapi
  * This is a work in progress. Functionality will be added when needed
  * Prefer functionality of the Kotlin standard library, as long as it is implemented for the JVM and Native target
 
-##Licence
+## Licence
 Apache 2.0
