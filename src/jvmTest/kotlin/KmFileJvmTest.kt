@@ -4,14 +4,13 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 //import java.io.File
 import de.rdvsb.kmapi.*
-import java.util.concurrent.TimeUnit
 import kotlin.time.ExperimentalTime
 
 internal class FileJvmTest {
 	private val tstFile = File("/tmp/x.x")
 	private val f = java.io.File("/tmp/x1.x")
 
-	val x = tstFile.bufferedReader()
+//	val x = tstFile.bufferedWriter()
 
 
 
@@ -19,6 +18,8 @@ internal class FileJvmTest {
 	@Test
 	fun fileName() {
 		println("FileJvmTest.fileName start")
+
+
 
 		var timeout: kotlin.time.Duration = kotlin.time.Duration.INFINITE
 
