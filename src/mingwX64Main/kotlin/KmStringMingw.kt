@@ -5,6 +5,7 @@ import platform.posix.LC_ALL
 import platform.posix.setlocale
 import platform.posix.*
 
+// enforce en_US locale. Always use consistent decimal point and grouping chars for system logs
 private val setLocale = setlocale(LC_ALL, "en_US.UTF-8"); // allow thousands separators
 
 // some C string util functions which share a common per thread C char buffer
@@ -21,6 +22,7 @@ private val cstrBuf = nativeHeap.allocArray<ByteVar>(cstrBufLen)
 
 public actual fun <T> String.sprintf(t: T): String {
 	// e.g. "%'8.2g".sprintf(2.2)
+
 	val bufLen = cstrBufLen.toULong()
 	when (t) {
 		is Byte   -> snprintf(cstrBuf, bufLen, this, t.toByte(), 0, 0, 0)
