@@ -4,6 +4,7 @@ import de.rdvsb.kmapi.System
 import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.AtomicReference
 import de.rdvsb.kmapi.*
+import kotlin.native.concurrent.freeze
 
 // some platform dependend Posix functions
 public const val InvalidHandle: Int = -1
@@ -27,7 +28,7 @@ public actual object logMessage {
 	private val logFileHandle = AtomicInt(InvalidHandle)
 	private val isLogToFile = AtomicInt(0) // false if logFileName is empty or logFileHandle could not be opened
 
-	private val _logDirs = AtomicReference(if (System.isWindows) windowsLogDirs.asList() else unixLogDirs.asList()) // cannot use backing filed (requested assignment in setter will fail since object is frozen)
+	private val _logDirs = AtomicReference((if (System.isWindows) windowsLogDirs.asList() else unixLogDirs.asList()).freeze()) // cannot use backing filed (requested assignment in setter will fail since object is frozen)
 	public actual var logDirs: List<String>
 		get() = _logDirs.value
 		set(value) {
