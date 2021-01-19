@@ -12,6 +12,9 @@ import de.rdvsb.kmapi.*
  * @return true
  */
 
+// enforce en_US locale. Always use consistent decimal point and grouping chars for system logs
+private val locale = Locale.setDefault(Locale("en", "US"))
+
 private var tzNameBuf: String = ""
 private val tzName: String
 	get() {
