@@ -54,6 +54,9 @@ public actual object logMessage {
 			}
 			field = value
 		}
+	public actual var maxLogSize: Long = 10*1024*1024
+	public actual var maxLogVersion: Int = 9
+
 	public actual var countWarning: Int = 0
 	public actual var countError: Int = 0
 	public actual var countFatal: Int =0
@@ -64,7 +67,7 @@ public actual object logMessage {
 			try {
 				return PrintWriter(FileOutputStream(File(path), true), false)
 			} catch (e: Exception) {
-				System.err.print("$msgTS E|logMessage(): cannot open log file $path\n")
+				System.err.print("$msgTS E|logMessage(): cannot open log file $path(logDir=\"$logDir\")\n")
 			}
 			return null
 		}
@@ -72,6 +75,7 @@ public actual object logMessage {
 		logDirs.forEach { dirName ->
 			if (dirName != "-") {
 				logDir = dirName
+				//System.err.print("$msgTS D|logMessage(): try to write to \"$logName\" in dir \"$logDir\"\n")
 				try {
 					return PrintWriter(FileOutputStream(File(logPath), true), false)
 				} catch (e: Exception) {
@@ -112,9 +116,29 @@ public actual object logMessage {
 			val path = logPath
 			if (path.isNotEmpty()) {
 				isLogToFile = false
-				logWriter = openLogFile(path, msgTS)?.also {
+				logWriter = openLogFile(path, msgTS)
+				if (logWriter != null) {
 					isLogToFile = true
-					if (!isQuiet) System.err.print("$msgTS I|log to $logPath\n")
+
+					var logFile = File(logPath)
+					if (logFile.length() > maxLogSize) {
+						logWriter?.close()
+						logFile.renameTo(File("${logPath}.0"))
+//if (-f $LogName && (stat ($LogName))[7] > 512*1024) { #size > 512K ?
+//                     my ($n) = 30;
+//
+//                     unlink ("$LogName.$n");
+//                     for (; $n > 0; --$n) {
+//                             my ($m) = "." . ($n - 1);
+//                             $m = "" if $n == 1;
+//                             rename ("${LogName}$m", "$LogName.$n");
+//                     }
+//             }
+//
+						logWriter = openLogFile(path, msgTS)
+					}
+
+					if (!isQuiet) System.err.print("$msgTS I|log to $logPath logDir=$logDir\n")
 
 				}
 			}
@@ -136,5 +160,4 @@ public actual object logMessage {
 
 		return true
 	}
-
 }

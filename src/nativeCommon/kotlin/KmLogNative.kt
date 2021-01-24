@@ -89,7 +89,7 @@ public actual object logMessage {
 	private fun openLogFile(path: String, msgTS: String): Int {
 		if (logDir != "*") {
 			val fh = openFile(path)
-			if (fh != InvalidHandle) printFile(Stderr, "$msgTS E|logMessage(): cannot open log file $path\n")
+			if (fh == InvalidHandle) printFile(Stderr, "$msgTS E|logMessage(): cannot open log file $path\n")
 			return fh
 		}
 
