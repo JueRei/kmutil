@@ -10,6 +10,8 @@ public expect object logMessage {
 	public var logDirs: List<String> // try these for logDir if logDir is set to "*"
 	public var logDir: String  // dir name
 	public var logName: String // file base name
+	public var maxLogSize: Long// max size of log before renaming (default 10MB)
+	public var maxLogVersion: Int // keep this much old log versions (*log.1 .. *log.maxLogVersion) (default 9)
 	public var countWarning: Int
 	public var countError: Int
 	public var countFatal: Int
