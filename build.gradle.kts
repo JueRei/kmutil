@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "de.rdvsb"
-version = "0.1-SNAPSHOT"
+version = "0.1.2-SNAPSHOT"
 
 repositories {
 	jcenter()
@@ -39,7 +39,7 @@ kotlin {
 		val commonMain by getting {
 			dependencies {
 				implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
-				implementation("de.rdvsb:kmapi:0.1-SNAPSHOT")
+				implementation("de.rdvsb:kmapi:0.1.2-SNAPSHOT")
 			}
 
 		}
