@@ -24,7 +24,7 @@ private val cstrBuf = nativeHeap.allocArray<ByteVar>(cstrBufLen)
 
 public actual fun openFile(pathName: String): Int {
 	val fh = open(pathName, O_WRONLY or O_APPEND or O_CREAT, S_IRUSR or S_IWUSR or S_IRGRP or S_IWGRP)
-	if (fh < 0) perror("openFile cannot open \"$pathName\"")
+	//if (fh < 0) perror("openFile cannot open \"$pathName\"")
 	return fh
 }
 
