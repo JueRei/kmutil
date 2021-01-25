@@ -1,6 +1,7 @@
 package de.rdvsb.kmutil
 
 import de.rdvsb.kmapi.File
+import de.rdvsb.kmapi.System
 
 /**
  * basic getArgs class.
@@ -10,6 +11,11 @@ import de.rdvsb.kmapi.File
  * **Note**: Must be inherited to create real getArgs object
  */
 public open class BasicGetArgs {
+	protected fun updateAppPath(getArgs: BasicGetArgs): String	{
+		val appPath = de.rdvsb.kmapi.computeAppPath(getArgs)
+		System.setProperty("app-name", appPath)
+		return appPath
+	}
 	public var appPath: String = "_basicGetArgs_not_yet_overwritten_by_real_getArgs_object_"
 		get() = field
 		set(value)  {
@@ -22,7 +28,7 @@ public open class BasicGetArgs {
 		}
 	public var appName: String = "app"
 		get() = field
-		set(value)  {
+		set(value) {
 			val v = value.substringAfterLast(File.separatorChar).substringBeforeLast('.')
 			val changed =  field != v
 			field = v
