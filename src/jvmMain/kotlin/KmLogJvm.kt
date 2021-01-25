@@ -1,6 +1,5 @@
 package de.rdvsb.kmutil
 
-import java.io.File
 import java.io.FileOutputStream
 import java.io.PrintWriter
 import java.text.SimpleDateFormat
@@ -63,6 +62,7 @@ public actual object logMessage {
 	public actual var isQuiet: Boolean = false
 
 	private fun openLogFile(path: String, msgTS: String): PrintWriter? {
+		logMessage('D', "openLogFile(path:$path) logDir=$logDir")
 		if (logDir != "*") {
 			try {
 				return PrintWriter(FileOutputStream(File(path), true), false)
@@ -113,32 +113,22 @@ public actual object logMessage {
 		val msgTS = nowTS()
 
 		if (isLogToFile && logWriter == null) {
-			val path = logPath
+			var path = logPath
 			if (path.isNotEmpty()) {
 				isLogToFile = false
 				logWriter = openLogFile(path, msgTS)
 				if (logWriter != null) {
 					isLogToFile = true
+					path = logPath // dir location may have changed (chosen from logDirs)
 
-					var logFile = File(logPath)
+					var logFile = File(path)
 					if (logFile.length() > maxLogSize) {
 						logWriter?.close()
-						logFile.renameTo(File("${logPath}.0"))
-//if (-f $LogName && (stat ($LogName))[7] > 512*1024) { #size > 512K ?
-//                     my ($n) = 30;
-//
-//                     unlink ("$LogName.$n");
-//                     for (; $n > 0; --$n) {
-//                             my ($m) = "." . ($n - 1);
-//                             $m = "" if $n == 1;
-//                             rename ("${LogName}$m", "$LogName.$n");
-//                     }
-//             }
-//
+						logFile.rotateRename(maxLogVersion)
 						logWriter = openLogFile(path, msgTS)
 					}
 
-					if (!isQuiet) System.err.print("$msgTS I|log to $logPath logDir=$logDir\n")
+					if (!isQuiet) System.err.print("$msgTS I|log to $path logDir=$logDir\n")
 
 				}
 			}
@@ -152,7 +142,7 @@ public actual object logMessage {
 		}
 
 		val m = msgBuf.toString()
-		if (!isQuiet) System.err.println(m)
+		if (!isQuiet) System.err.print(m)
 		logWriter?.run {
 			print(m)
 			flush()

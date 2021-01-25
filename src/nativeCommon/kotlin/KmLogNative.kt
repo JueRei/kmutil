@@ -1,10 +1,11 @@
 package de.rdvsb.kmutil
 
-import de.rdvsb.kmapi.System
 import kotlin.native.concurrent.AtomicInt
 import kotlin.native.concurrent.AtomicReference
-import de.rdvsb.kmapi.*
+import kotlin.native.concurrent.AtomicLong
 import kotlin.native.concurrent.freeze
+
+import de.rdvsb.kmapi.*
 
 // some platform dependend Posix functions
 public const val InvalidHandle: Int = -1
@@ -56,6 +57,20 @@ public actual object logMessage {
 				logFileHandle.value = InvalidHandle
 			}
 			_logFileName.value = value
+		}
+
+	private val _maxLogSize = AtomicLong(10*1024*1024)
+	public actual var maxLogSize: Long
+		get() = _maxLogSize.value
+		set(value) {
+			_maxLogSize.value = value
+		}
+
+	private val _maxLogVersion = AtomicInt(9)
+	public actual var maxLogVersion: Int
+		get() = _maxLogVersion.value
+		set(value) {
+			_maxLogVersion.value = value
 		}
 
 	private val _countWarning = AtomicInt(0)
@@ -134,11 +149,20 @@ public actual object logMessage {
 		val msgTS = logDateFormatted(nowMillis)
 
 		if (isLogToFile && logFh == InvalidHandle) {
-			val path = logPath
+			var path = logPath
 			if (path.isNotEmpty()) {
 				isLogToFile = false
 				this.isLogToFile.value = 0
 				logFh = openLogFile(path, msgTS)
+				if (logFh != InvalidHandle) {
+					path = logPath // dir location may have changed (chosen from logDirs)
+					var logFile = File(path)
+					if (logFile.length() > maxLogSize) {
+						closeFile(logFh)
+						logFile.rotateRename(maxLogVersion)
+						logFh = openFile(path)
+					}
+				}
 				if (logFh != InvalidHandle) {
 					logFileHandle.value = logFh
 					isLogToFile = true
