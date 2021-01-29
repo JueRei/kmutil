@@ -22,6 +22,10 @@ public open class IniProperties() {
 	*/
 	public var propertyMap: MutableMap<String, String?> = mutableMapOf()
 	public var section2PropertyMap: MutableMap<String, MutableMap<String, String?>> = mutableMapOf()
+	/**
+	 * don't show the value of these properties (passwords and other secrets)
+	 */
+	public val hidePropertiesMap: MutableMap<String, Unit> = mutableMapOf()
 
 	/**
 	 * current section
@@ -119,31 +123,33 @@ public open class IniProperties() {
 	}
 
 	public companion object {
-		public fun valAsDisplay(value: Any?): String {
-			if (value == null) return ""
+		public fun propertyAsDisplay(property: String, value: Any?, hide: Boolean = false): String {
+			if (hide) return "$property = <HIDDEN>"
+			if (value == null) return "$property ="
 			return value.toString().run {
 				when {
-					contains('"')            -> "'$this'"
-					contains('\'')           -> "\"$this\""
-					toLongOrNull() != null   -> this
-					toDoubleOrNull() != null -> this
-					else                     -> "\"$this\""
+					contains('"')            -> "$property = '$this'"
+					contains('\'')           -> "$property = \"$this\""
+					toLongOrNull() != null   -> "$property = $this"
+					toDoubleOrNull() != null -> "$property = $this"
+					else                     -> "$property = \"$this\""
 				}
 			}
 		}
 	}
 
+	public open fun propertyAsDisplay(property: String, value: Any?): String = propertyAsDisplay(property, value, property in hidePropertiesMap)
 
 	public open fun asText(): String {
 		val textBuilder = StringBuilder(1024)
 
 		for ((property, value) in propertyMap.entries.sortedBy { it.key }) {
-			textBuilder.append("$property = ${valAsDisplay(value)}".trimEnd()).append('\n')
+			textBuilder.append(propertyAsDisplay(property, value)).append('\n')
 		}
 		for ((section, sectionPropertyMap) in section2PropertyMap.entries.sortedBy { it.key }) {
 			textBuilder.append("\n[$section]\n")
 			for ((property, value) in sectionPropertyMap.entries.sortedBy { it.key }) {
-				textBuilder.append("$property = ${valAsDisplay(value)}".trimEnd()).append('\n')
+				textBuilder.append(propertyAsDisplay(property, value)).append('\n')
 			}
 		}
 		return textBuilder.toString()

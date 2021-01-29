@@ -13,24 +13,28 @@ internal class IniPropertiesCommonTest {
 	fun iniReaderTest() {
 		println("IniPropertiesCommonTest.iniReaderTest start")
 
-		assertEquals("", IniProperties.valAsDisplay(null))
-		assertEquals("'a\"b'", IniProperties.valAsDisplay("a\"b"))
-		assertEquals("\"a'b\"", IniProperties.valAsDisplay("a\'b"))
-		assertEquals("\"ab\"", IniProperties.valAsDisplay("ab"))
-		assertEquals("12", IniProperties.valAsDisplay(12))
-		assertEquals("1.2", IniProperties.valAsDisplay(1.2))
+		assertEquals("val =", IniProperties.propertyAsDisplay("val", null))
+		assertEquals("val = 'a\"b'", IniProperties.propertyAsDisplay("val", "a\"b"))
+		assertEquals("val = \"a'b\"", IniProperties.propertyAsDisplay("val", "a\'b"))
+		assertEquals("val = \"ab\"", IniProperties.propertyAsDisplay("val", "ab"))
+		assertEquals("val = 12", IniProperties.propertyAsDisplay("val", 12))
+		assertEquals("val = 1.2", IniProperties.propertyAsDisplay("val", 1.2))
+		assertEquals("val = <HIDDEN>", IniProperties.propertyAsDisplay("val", "ab", true))
 
 		///////////////////////////////////////////////////////////////
-		// test basic ini reader
-		val iniReader = IniProperties()
+		// test generic ini reader
+		val iniReader = IniProperties().apply {
+			hidePropertiesMap["password"] = Unit
+		}
 
 		val iniText = """
 			|### test ini parsing ###
 			|   ; also a comment
-			| noVal = 
+			| noVal =
 			|paramInt = 10
-			|paramStr1 = "it's a string param hello" 
+			|paramStr1 = "it's a string param hello"
 			| paramStr2 = 'this is a "string" too'
+			| password = "secret"
 			|
 			|#---------------------------
 			| [Sect1]
@@ -49,6 +53,7 @@ internal class IniPropertiesCommonTest {
 			.map { it.trim() }
 			.filterNot { it.isBlank() || it.startsWith('#') || it.startsWith(';') }
 			.map { if (it.startsWith('[')) "\n$it" else it }
+			.map { if (it.startsWith("password")) "password = <HIDDEN>" else it }
 			.joinToString("\n") + '\n'
 
 		var iniTextRetrieved = iniReader.asText()
@@ -67,29 +72,35 @@ internal class IniPropertiesCommonTest {
 			var paramInt: Int = 0,
 			var paramStr1: String = "",
 			var paramStr2: String = "",
+			var password: String = "",
 			var sect1_name: String = "",
 			var sect1_val: Double = 0.0,
 			var sect2_name: String = "",
 			var sect2_val: Long = 0,
 		) : IniProperties() {
+			init {
+				hidePropertiesMap["password"] = Unit
+			}
+
 			override fun asText(): String {
 				return """
 					|### test ini parsing ###
 					|   ; also a comment
-					| noVal = ${valAsDisplay(noVal)}
-					|paramInt = ${valAsDisplay(paramInt)}
-					|paramStr1 = ${valAsDisplay(paramStr1)} 
-					| paramStr2 = ${valAsDisplay(paramStr2)}
+					| ${propertyAsDisplay("noVal", noVal)}
+					|${propertyAsDisplay("paramInt", paramInt)}
+					|${propertyAsDisplay("paramStr1", paramStr1)}
+					| ${propertyAsDisplay("paramStr2", paramStr2)}
+					| ${propertyAsDisplay("password", password)}
 					|
 					|#---------------------------
 					| [Sect1]
-					|    name = ${valAsDisplay(sect1_name)}
-					|    val = ${valAsDisplay(sect1_val)}
+					|    ${propertyAsDisplay("name", sect1_name)}
+					|    ${propertyAsDisplay("val", sect1_val)}
 					|
 					|#---------------------------
 					| [Sect2]
-					|    name = ${valAsDisplay(sect2_name)}
-					|    val = ${valAsDisplay(sect2_val)}
+					|    ${propertyAsDisplay("name", sect2_name)}
+					|    ${propertyAsDisplay("val", sect2_val)}
 				""".trimMargin()
 			}
 		}
@@ -102,6 +113,7 @@ internal class IniPropertiesCommonTest {
 						"paramInt"  -> paramInt = value?.toIntOrNull() ?: 0
 						"paramStr1" -> paramStr1 = value ?: ""
 						"paramStr2" -> paramStr2 = value ?: ""
+						"password" -> password = value ?: ""
 						else        -> fail("unexpected global ini property \"$property\" line=\"$line\"")
 
 					}
@@ -126,8 +138,11 @@ internal class IniPropertiesCommonTest {
 		}
 
 		iniTextRetrieved = tstIniData.asText()
-		logMessage('I', "got custome ini data\n$iniTextRetrieved")
-		assertEquals(iniText, iniTextRetrieved)
+		logMessage('I', "got custom ini data\n$iniTextRetrieved")
+
+		expectIniText = iniText.replace("\"secret\"", "<HIDDEN>")
+
+		assertEquals(expectIniText, iniTextRetrieved)
 
 		var extra_extraParam: Double? = null
 
