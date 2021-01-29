@@ -42,7 +42,7 @@ internal class IniPropertiesCommonTest {
 			|    name = "section 2"
 			|    val = 2
 		""".trimMargin()
-		logMessage('D', "parse ini data\n$iniText")
+		//logMessage('D', "parse ini data\n$iniText")
 		iniReader.parse(iniText)
 
 		var expectIniText = iniText.lineSequence()

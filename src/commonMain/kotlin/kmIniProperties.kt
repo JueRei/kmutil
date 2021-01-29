@@ -67,7 +67,6 @@ public open class IniProperties() {
 				line.startsWith(';') -> return
 				line.startsWith('[') -> {
 					val matchGroups = matchSection.find(line)?.groupValues
-					println("sect matchGroups=$matchGroups")
 					if (matchGroups == null || matchGroups.size != 2) {
 						logMessage('E', "illegal section start \"$line\"") && return
 					} else {
@@ -77,7 +76,6 @@ public open class IniProperties() {
 				}
 				else                 -> {
 					val matchGroups = matchProperty.find(line)?.groupValues
-					println("else matchGroups=$matchGroups")
 					if (matchGroups == null || matchGroups.size != 3) {
 						logMessage('E', "illegal property line \"$line\"") && return
 					} else {
