@@ -12,6 +12,16 @@ import kotlin.test.assertEquals
 internal class StringCommonTest {
 
 	@Test
+	fun fmtTest() {
+		println("StringCommonTest.fmtTest start")
+
+		assertEquals("1.2", 1.2345.toFmt("%1.1f"))
+		assertEquals("1.3", 1.2645.toFmt("%1.1f"))
+
+		println("StringCommonTest.fmtTest start")
+	}
+
+	@Test
 	fun fmtMetricTest() {
 		println("StringCommonTest.fmtMetricTest start")
 
