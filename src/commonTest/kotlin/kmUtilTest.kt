@@ -12,7 +12,7 @@ internal class UtilCommonTest {
 
 	@Test
 	fun xxxTest() {
-		println("UtilCommonTest.xxxTest start")
+		println("UtilCommonTest.xxxTest start on ${ticAsDateTime()}")
 
 
 		println("UtilCommonTest.xxxTest end")

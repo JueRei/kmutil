@@ -17,7 +17,7 @@ internal class FileNativeTest {
 	fun fileName() {
 
 
-		logMessage('I', "start\ntest")
+		logMessage('I', "start\ntest on ${ticAsDateTime()}")
 		println("FileNativeTest.fileName start")
 
 		println("  fileName ${tstFile.name}")

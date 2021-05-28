@@ -61,7 +61,7 @@ private var tzNameBuf: String = ""
 public actual val tzName: String
 	get() {
 		if (tzNameBuf.isEmpty()) {
-			time_tVar.value = time(null) / 1000L
+			time_tVar.value = time(null)
 			platform.posix.localtime_r(time_tVar.ptr, tmVar.ptr)
 			strftime(cstrBuf, cstrBufLen.toULong(), "%Z%z", tmVar.ptr)
 			tzNameBuf = cstrBuf.toKString()

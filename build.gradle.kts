@@ -1,12 +1,13 @@
 plugins {
-	kotlin("multiplatform") version "1.5.0"
+	kotlin("multiplatform") version "1.5.10"
 	`maven-publish`
 }
 
 group = "de.rdvsb"
-version = "0.1.3-SNAPSHOT"
+version = "0.1.4-SNAPSHOT"
 
-val coroutinesVersion = "1.4.3"
+val kotlinVersion = "1.5.10"
+val coroutinesVersion = "1.5.0"
 
 
 repositories {
