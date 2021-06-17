@@ -31,10 +31,10 @@ private val tzName: String
 
 
 public actual object logMessage {
-	private val windowsLogDirs: Array<String> = arrayOf("C:\\Local\\Logs", "C:\\Local\\Log", "log", "", System.getenv("Temp")?:"-", System.getenv("Tmp")?:"-")
-	private val unixLogDirs: Array<String> = arrayOf("/var/log", "${System.getenv("HOME")?:"-"}/log", System.getenv("HOME")?:"-", "log", "/tmp", "")
+	private val windowsLogDirs: Array<String> = arrayOf("C:\\Local\\Logs", "C:\\Local\\Log", "log", "", System.getenv("Temp") ?: "-", System.getenv("Tmp") ?: "-")
+	private val unixLogDirs: Array<String> = arrayOf("/var/log", "${System.getenv("HOME") ?: "-"}/log", System.getenv("HOME") ?: "-", "log", "/tmp", "")
 	private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS") // see https://docs.oracle.com/javase/8/docs/api/java/text/SimpleDateFormat.html
-	private fun nowTS() = dateFormat.format(System.currentTimeMillis())?:"now"
+	private fun nowTS() = dateFormat.format(System.currentTimeMillis()) ?: "now"
 	private var logWriter: PrintWriter? = null
 	private var isLogToFile: Boolean = false // false if logFileName is empty or logFileHandle could not be opened
 
@@ -58,12 +58,12 @@ public actual object logMessage {
 			}
 			field = value
 		}
-	public actual var maxLogSize: Long = 10*1024*1024
+	public actual var maxLogSize: Long = 10 * 1024 * 1024
 	public actual var maxLogVersion: Int = 9
 
 	public actual var countWarning: Int = 0
 	public actual var countError: Int = 0
-	public actual var countFatal: Int =0
+	public actual var countFatal: Int = 0
 	public actual var isQuiet: Boolean = false
 
 	private fun openLogFile(path: String, msgTS: String): PrintWriter? {
@@ -93,7 +93,7 @@ public actual object logMessage {
 		return null
 	}
 
-	public actual operator fun invoke(msgId: Char, vararg msgs: String): Boolean {
+	public actual operator fun invoke(id: String?, msgId: Char, vararg msgs: String): Boolean {
 		var useMsgId = msgId
 		when (msgId) {
 			' ' -> {
@@ -139,11 +139,12 @@ public actual object logMessage {
 			}
 		}
 
+		val idStr = if (id.isNullOrEmpty()) "" else "$id|"
 		val msg = msgs.joinToString("")
 		val msgBuf = StringBuilder(msg.length + 128)
 		for ((i, line) in msg.splitToSequence("\n").withIndex()) {
 			val sep = if (i == 0) '|' else '+'
-			msgBuf.append(msgTS, ' ',  useMsgId, sep, line, '\n')
+			msgBuf.append(msgTS, ' ', useMsgId, sep, idStr, line, '\n')
 		}
 
 		val m = msgBuf.toString()
@@ -155,4 +156,7 @@ public actual object logMessage {
 
 		return true
 	}
+
+	public actual operator fun invoke(msgId: Char, vararg msgs: String): Boolean = invoke(null, msgId, *msgs)
+
 }

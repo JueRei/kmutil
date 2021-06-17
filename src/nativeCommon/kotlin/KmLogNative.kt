@@ -125,7 +125,7 @@ public actual object logMessage {
 		return InvalidHandle
 	}
 
-	public actual operator fun invoke(msgId: Char, vararg msgs: String): Boolean {
+	public actual operator fun invoke(id: String?, msgId: Char, vararg msgs: String): Boolean {
 		var logFh = logFileHandle.value
 		var isLogToFile: Boolean = (isLogToFile.value != 0)
 		var useMsgId = msgId
@@ -178,11 +178,12 @@ public actual object logMessage {
 			}
 		}
 
+		val idStr = if (id.isNullOrEmpty()) "" else "$id|"
 		val msg = msgs.joinToString("")
 		val msgBuf = StringBuilder(msg.length + 128)
 		for ((i, line) in msg.splitToSequence("\n").withIndex()) {
 			val sep = if (i == 0) '|' else '+'
-			msgBuf.append(msgTS, ' ',  useMsgId, sep, line, '\n')
+			msgBuf.append(msgTS, ' ',  useMsgId, sep, idStr, line, '\n')
 		}
 
 		val m = msgBuf.toString()
@@ -191,4 +192,6 @@ public actual object logMessage {
 
 		return true;
 	}
+
+	public actual operator fun invoke(msgId: Char, vararg msgs: String): Boolean = invoke(null, msgId, *msgs)
 }
