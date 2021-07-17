@@ -64,7 +64,7 @@ public actual object logMessage {
 			_logFileName.value = value
 		}
 
-	private val _maxLogSize = AtomicLong(10*1024*1024)
+	private val _maxLogSize = AtomicLong(10*1024*1024L)
 	public actual var maxLogSize: Long
 		get() = _maxLogSize.value
 		set(value) {
