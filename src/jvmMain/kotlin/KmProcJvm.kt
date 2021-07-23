@@ -9,7 +9,6 @@ import java.io.InputStream
 import java.util.concurrent.TimeUnit
 import java.io.FileOutputStream
 import java.nio.channels.FileLock
-import java.lang.Process as JvmProcess
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -57,7 +56,8 @@ private suspend fun InputStream.processLineSuspending(process: KmProcess, readFr
 }
 
 /**
- * run via shell so globbing and command grouping or chaining with semicolons is supported
+ * Unix: run via shell so globbing and command grouping or chaining with semicolons is supported
+ * Windows run via cmd.exe so globbing and command grouping or chaining with semicolons is **NOT** supported
  * stdin is inherited from current process
  * stderr and stdout are captured and a supplied callback function is called for each captured stdin/stderr line
  *
@@ -69,7 +69,12 @@ public actual fun system(cmd: String, timeout: Duration, processLine: (line: Str
 
 	logMessage('I', "system: $cmd")
 
-	val processBuilder = ProcessBuilder("sh", "-c", cmd)
+	val processBuilder = if (de.rdvsb.kmapi.System.isWindows) {
+		ProcessBuilder("cmd.exe", "/c", "($cmd & exit)")
+	} else {
+		ProcessBuilder("sh", "-c", cmd)
+	}
+
 	processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT)
 
 	val process = KmProcess(processBuilder.start())
