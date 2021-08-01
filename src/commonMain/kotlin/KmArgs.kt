@@ -43,6 +43,9 @@ public open class BasicGetArgs {
 			}
 		}
 
+	public var isTest: Boolean = false
+	public val isNotTest: Boolean get() = !isTest
+
 	public var isVerbose: Boolean = false
 	public val isNotVerbose: Boolean get() = !isVerbose
 

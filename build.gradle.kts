@@ -4,14 +4,13 @@ plugins {
 }
 
 group = "de.rdvsb"
-version = "0.1.5-SNAPSHOT"
+version = "0.1.6-SNAPSHOT"
 
 val kotlinVersion = "1.5.21"
 val coroutinesVersion = "1.5.1"
 
 
 repositories {
-	//jcenter()
 	mavenCentral()
 	mavenLocal()
 }
