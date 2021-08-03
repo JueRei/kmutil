@@ -2,7 +2,7 @@
 Provide some useful classes and functions for Kotlin multiplatform utilities 
 Based on de.rdvsb.kmapi
 
-## Preliminary version 0.1.6
+## Preliminary version 0.1.7
 ### parts working (using kmutil and kmapi):
 
 | Module | Common | JVM | NativeLinux | NativeMingw |
@@ -14,6 +14,7 @@ Based on de.rdvsb.kmapi
 | OutputStream | x | x | - | - |
 | KmProcess | x | x | - | - |
 | StringUtil | x | x | x | x |
+| DateTime | x | x | x | x |
 
 ## Goals
  * Ability to write these utilities in a platform independent fashion

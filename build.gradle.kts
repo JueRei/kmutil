@@ -4,10 +4,11 @@ plugins {
 }
 
 group = "de.rdvsb"
-version = "0.1.6-SNAPSHOT"
+version = "0.1.7-SNAPSHOT"
 
 val kotlinVersion = "1.5.21"
 val coroutinesVersion = "1.5.1"
+val kotlin_date_version ="0.2.1"
 
 
 repositories {
@@ -42,7 +43,8 @@ kotlin {
 		val commonMain by getting {
 			dependencies {
 				implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-				implementation("de.rdvsb:kmapi:0.1.3-SNAPSHOT")
+				implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlin_date_version")
+				implementation("de.rdvsb:kmapi:0.1.4-SNAPSHOT")
 			}
 
 		}
