@@ -14,7 +14,18 @@ public fun ticAsDateTimeUtc(millis: Long? = null): String = Instant.fromEpochMil
 public fun Long.ticAsDateTimeUtc(): String = ticAsDateTimeUtc(this)
 
 public fun String.parseUtcDateTime(): Instant = replace(' ', 'T').toLocalDateTime().toInstant(TimeZone.UTC)
+public fun String.parseUtcDateTimeOrNull(): Instant? = try {
+	parseUtcDateTime()
+} catch (e: Exception) {
+	null
+}
+
 public fun String.parseLocalDateTime(): Instant = replace(' ', 'T').toLocalDateTime().toInstant(TimeZone.currentSystemDefault())
+public fun String.parseLocalDateTimeOrNull(): Instant? = try {
+	parseLocalDateTime()
+} catch (e: Exception) {
+	null
+}
 public fun Instant.toDateTime(): String = toLocalDateTime(TimeZone.currentSystemDefault()).let { it.toString().replace('T', ' ') + if (it.second == 0) ":00" else "" }
 public fun Instant.toUtcDateTime(): String = toLocalDateTime(TimeZone.UTC).let { it.toString().replace('T', ' ') + if (it.second == 0) ":00" else "" }
 
