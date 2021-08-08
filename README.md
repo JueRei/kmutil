@@ -2,7 +2,7 @@
 Provide some useful classes and functions for Kotlin multiplatform utilities 
 Based on de.rdvsb.kmapi
 
-## Preliminary version 0.1.7
+## Preliminary version 0.1.8
 ### parts working (using kmutil and kmapi):
 
 | Module | Common | JVM | NativeLinux | NativeMingw |
