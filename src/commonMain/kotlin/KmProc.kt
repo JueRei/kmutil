@@ -115,15 +115,30 @@ public fun die(errText: String? = null): Nothing {
 
 public val onExitRunCmds: ArrayList<String> = arrayListOf<String>()
 
+/**
+ * log message and exit application
+ * @param status return code to OS
+ * @param msg optional message to log (msgId depends on status)
+ *
+ */
 @OptIn(ExperimentalTime::class)
-public fun exit(status: Int): Nothing {
+public fun exit(status: Int, msg: String? = null): Nothing {
+	if (msg != null) {
+		logMessage(
+			when (status) {
+				0 -> 'I'
+				1 -> 'E'
+				else -> 'F'
+			},
+			msg
+		)
+	}
 	for (cmd in onExitRunCmds) {
 		system(cmd)
 	}
 
 	System.exit(status)
 }
-
 
 
 public expect class GlobalLock(lockName: String, doLock: Boolean = true): Closeable {
