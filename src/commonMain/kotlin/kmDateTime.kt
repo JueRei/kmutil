@@ -29,3 +29,11 @@ public fun String.parseLocalDateTimeOrNull(): Instant? = try {
 public fun Instant.toDateTime(): String = toLocalDateTime(TimeZone.currentSystemDefault()).let { it.toString().replace('T', ' ') + if (it.second == 0) ":00" else "" }
 public fun Instant.toUtcDateTime(): String = toLocalDateTime(TimeZone.UTC).let { it.toString().replace('T', ' ') + if (it.second == 0) ":00" else "" }
 
+//TODO:
+// add common LocalTime and implementation for native
+//public fun String.parseTime(): LocalTime = LocalTime.parse(this)
+//public fun String.parseTimeOrNull(): LocalTime? = try {
+//	parseTime()
+//} catch (e: Exception) {
+//	null
+//}

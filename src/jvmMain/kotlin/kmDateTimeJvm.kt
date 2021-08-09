@@ -1,5 +1,7 @@
 package de.rdvsb.kmutil
 
+import java.time.LocalTime
+
 //import de.rdvsb.kmapi.System
 //import kotlinx.datetime.*
 //import java.text.SimpleDateFormat
@@ -15,3 +17,11 @@ package de.rdvsb.kmutil
 // 		val datetimeInUtc: LocalDateTime = currentMoment.toLocalDateTime(TimeZone.UTC)
 //		val datetimeInSystemZone: LocalDateTime = currentMoment.toLocalDateTime(TimeZone.currentSystemDefault())
 //		val instantInUtc = "2021-08-03T16:05:33.213".toLocalDateTime().toInstant(TimeZone.UTC)
+
+
+public fun String.parseTime(): LocalTime = LocalTime.parse(this)
+public fun String.parseTimeOrNull(): LocalTime? = try {
+	parseTime()
+} catch (e: Exception) {
+	null
+}
