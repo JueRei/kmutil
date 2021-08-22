@@ -5,6 +5,9 @@
 
 package de.rdvsb.kmutil
 import de.rdvsb.kmapi.*
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 /**
  * log messages to log file
@@ -39,5 +42,27 @@ public var logMessage.logPath: String  // full path
 			else    -> value.substring(0, ix)
 		}
 		logName = value.substring(ix + 1)
+		with(logDir) { println(this)}
 
 	}
+
+@OptIn(ExperimentalContracts::class)
+public inline fun <R> withLogMessage(id: String?, msgId: Char = ' ', vararg msgs: String, block: ()->R ): R {
+	contract {
+		callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+	}
+
+	logMessage(id, msgId, *msgs)
+	return block()
+}
+
+@OptIn(ExperimentalContracts::class)
+public inline fun <R> withLogMessage(msgId: Char = ' ', vararg msgs: String, block: ()->R ): R {
+	contract {
+		callsInPlace(block, InvocationKind.EXACTLY_ONCE)
+	}
+
+	logMessage(null, msgId, *msgs)
+	return block()
+}
+

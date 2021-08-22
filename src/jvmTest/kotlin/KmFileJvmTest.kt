@@ -22,7 +22,9 @@ internal class FileJvmTest {
 	@ExperimentalTime
 	@Test
 	fun fileName() {
-		println("FileJvmTest.fileName start")
+		withLogMessage('D', "fileName:") {
+			println("FileJvmTest.fileName start")
+		}
 
 
 
