@@ -1,12 +1,12 @@
 plugins {
-	kotlin("multiplatform") version "1.5.21"
+	kotlin("multiplatform") version "1.5.30"
 	`maven-publish`
 }
 
 group = "de.rdvsb"
-version = "0.1.9-SNAPSHOT"
+version = "0.1.10-SNAPSHOT"
 
-val kotlinVersion = "1.5.21"
+val kotlinVersion = "1.5.30"
 val coroutinesVersion = "1.5.1"
 val kotlin_date_version ="0.2.1"
 
