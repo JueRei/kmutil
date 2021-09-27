@@ -1,15 +1,17 @@
 plugins {
-	kotlin("multiplatform") version "1.5.30"
+	kotlin("multiplatform")
 	`maven-publish`
 }
 
 group = "de.rdvsb"
-version = "0.1.10-SNAPSHOT"
+version = "0.1.11-SNAPSHOT"
 
-val kotlinVersion = "1.5.30"
-val coroutinesVersion = "1.5.1"
-val kotlin_date_version ="0.2.1"
-
+val ktor_version: String by project
+val kotlin_version: String by project
+val logback_version: String by project
+val kotlin_coroutines_version: String by project
+val kotlin_serialization_version: String by project
+val kotlin_date_version: String by project
 
 repositories {
 	mavenCentral()
@@ -42,11 +44,10 @@ kotlin {
 	sourceSets {
 		val commonMain by getting {
 			dependencies {
-				implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+				implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version")
 				implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlin_date_version")
-				implementation("de.rdvsb:kmapi:0.1.4-SNAPSHOT")
+				implementation("de.rdvsb:kmapi-jvm:0.+")
 			}
-
 		}
 		val commonTest by getting {
 			dependencies {
