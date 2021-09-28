@@ -46,7 +46,7 @@ kotlin {
 			dependencies {
 				implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version")
 				implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlin_date_version")
-				implementation("de.rdvsb:kmapi-jvm:0.+")
+				implementation("de.rdvsb:kmapi:0.+")
 			}
 		}
 		val commonTest by getting {
