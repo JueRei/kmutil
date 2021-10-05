@@ -19,14 +19,11 @@ internal class FileJvmTest {
 
 
 
-	@ExperimentalTime
 	@Test
 	fun fileName() {
 		withLogMessage('D', "fileName:") {
 			println("FileJvmTest.fileName start")
 		}
-
-
 
 		var timeout: kotlin.time.Duration = kotlin.time.Duration.INFINITE
 

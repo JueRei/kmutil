@@ -69,7 +69,6 @@ public fun String.splitShellArgs(): List<String> {
  * no scripts supported no arg globbing done
  * @return the called process exit value
  */
-@OptIn(ExperimentalTime::class)
 public expect fun runBinary(cmd: String, timeout: kotlin.time.Duration = kotlin.time.Duration.INFINITE): Int
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public enum class LineFrom {OUT, ERR}
@@ -82,7 +81,6 @@ public enum class LineFrom {OUT, ERR}
  * **Note**: the processLine callback is called concurrently from two different threads
  * @return the called process exit value
  */
-@OptIn(ExperimentalTime::class)
 public expect fun system(cmd: String, timeout: kotlin.time.Duration = kotlin.time.Duration.INFINITE, processLine: (line: String, lineFrom: LineFrom, process: KmProcess) -> Unit): Int
 
 /**
@@ -91,7 +89,6 @@ public expect fun system(cmd: String, timeout: kotlin.time.Duration = kotlin.tim
  * stderr and stdout lines are written to log file tagged with tag
  * @return the called process exit value
  */
-@OptIn(ExperimentalTime::class)
 public fun systemWithLog(cmd: String, tag: String, timeout: kotlin.time.Duration = kotlin.time.Duration.INFINITE): Int {
 	return system(cmd, timeout) { line, lineFrom, _ ->
 		val msgId = if (lineFrom == LineFrom.OUT) 'I' else 'E'
@@ -105,7 +102,6 @@ public fun systemWithLog(cmd: String, tag: String, timeout: kotlin.time.Duration
  * stderr and stdout are written to current handles
  * @return the called process exit value
  */
-@OptIn(ExperimentalTime::class)
 public expect fun system(cmd: String, timeout: kotlin.time.Duration = kotlin.time.Duration.INFINITE): Int
 
 public fun die(errText: String? = null): Nothing {
@@ -121,7 +117,6 @@ public val onExitRunCmds: ArrayList<String> = arrayListOf<String>()
  * @param msg optional message to log (msgId depends on status)
  *
  */
-@OptIn(ExperimentalTime::class)
 public fun exit(status: Int, msg: String? = null): Nothing {
 	if (msg != null) {
 		logMessage(

@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "de.rdvsb"
-version = "0.1.11-SNAPSHOT"
+version = "0.1.12-SNAPSHOT"
 
 val ktor_version: String by project
 val kotlin_version: String by project
@@ -84,8 +84,17 @@ kotlin {
 			dependsOn(nativeCommon)
 		}
 
+		all {
+			languageSettings.optIn("kotlin.time.ExperimentalTime")
+			languageSettings.optIn("kotlin.contracts.ExperimentalContracts")
+		}
+
 	}
+
+
 }
+
+
 
 //println("kotlin.sourceSets: ${kotlin.sourceSets.names}")
 

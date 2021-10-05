@@ -15,7 +15,6 @@ import de.rdvsb.kmapi.*
  * no scripts supported no arg globbing done
  * @return the called process exit value
  */
-@OptIn(ExperimentalTime::class)
 public actual fun runBinary(cmd: String, timeout: Duration): Int {
 	TODO("Not yet implemented")
 }
@@ -28,7 +27,6 @@ public actual fun runBinary(cmd: String, timeout: Duration): Int {
  * **Note**: the processLine callback is called concurrently from two different threads
  * @return the called process exit value
  */
-@OptIn(ExperimentalTime::class)
 public actual fun system(cmd: String, timeout: Duration, processLine: (line: String, lineFrom: LineFrom, process: KmProcess) -> Unit): Int {
 	TODO("Not yet implemented")
 }
@@ -39,7 +37,6 @@ public actual fun system(cmd: String, timeout: Duration, processLine: (line: Str
  * stderr and stdout are written to current handles
  * @return the called process exit value
  */
-@OptIn(ExperimentalTime::class)
 public actual fun system(cmd: String, timeout: Duration): Int {
 	TODO("Not yet implemented")
 }

@@ -10,6 +10,10 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 import de.rdvsb.kmapi.*
 import kotlinx.datetime.*
+import kotlin.test.assertEquals
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 internal class DateTimeCommonTest {
 	@Test
@@ -33,6 +37,23 @@ internal class DateTimeCommonTest {
 //		assertTrue(tstFile.path.startsWith("..${File.separatorChar}"))
 
 		println("DateTimeCommonTest.dateTime end")
+
+
+		var dur = 12.34567.toDuration(DurationUnit.SECONDS)
+		println("dur=$dur 0:${dur.toString(0)} 1:${dur.toString(1)} 2:${dur.toString(2)} 10.${dur.toString(10)}")
+		assertEquals("12s", dur.toString(0))
+		assertEquals("12.3s", dur.toString(1))
+		assertEquals("12.34s", dur.toString(2))
+
+		dur = 123_456_789.34567.toDuration(DurationUnit.MICROSECONDS)
+		println("dur=$dur 0:${dur.toString(0)} 1:${dur.toString(1)} 2:${dur.toString(2)} 10.${dur.toString(10)}")
+		assertEquals("2m 3s", dur.toString(0))
+		assertEquals("2m 3.4s", dur.toString(1))
+		assertEquals("2m 3.45s", dur.toString(2))
+
+		dur = -123_456_789.34567.toDuration(DurationUnit.MICROSECONDS)
+		println("dur=$dur 0:${dur.toString(0)} 1:${dur.toString(1)} 2:${dur.toString(2)} 10.${dur.toString(10)}")
+		assertEquals("-(2m 3.4s)", dur.toString(1))
 	}
 
 }

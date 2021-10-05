@@ -5,6 +5,8 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlin.math.sign
+import kotlin.time.Duration
 
 //public expect fun ticAsDateTime(millis: Long? = null): String
 //public expect fun Long.ticAsDateTime(): String
@@ -37,3 +39,21 @@ public fun Instant.toUtcDateTime(): String = toLocalDateTime(TimeZone.UTC).let {
 //} catch (e: Exception) {
 //	null
 //}
+
+/**
+ * Returns a string representation of this duration value
+ * expressed as a combination of numeric components, each in its own unit
+ * like [Duration.toString()]
+ *
+ * @param maxDecimals max number of decimal digits shown for fractional part
+ */
+public fun Duration.toString(maxDecimals: Int): String =
+	this.toString().run {
+		val ix = indexOf('.')
+		val countDecimals = substring(ix + 1).count { it.isDigit() }
+		if (ix > 0 && countDecimals > maxDecimals) {
+			take(ix + maxDecimals + maxDecimals.sign) + substring(ix + countDecimals + 1)
+		} else {
+			this
+		}
+	}

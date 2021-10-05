@@ -16,7 +16,6 @@ import de.rdvsb.kmapi.*
  * check if it is already mounted if not unmount it at end of script via onExitRunCmds list
  * @return mountStatus: Boolean
  */
-@OptIn(ExperimentalTime::class)
 public actual fun mountDir(dirName: String, userName: String, password: String): Boolean {
 	System.getProperty("os.name").let {
 		if (it == null || !it.contains("Linux", true) && !it.contains("Unix", true) && !it.contains("BSD", true)) mountDir@return false

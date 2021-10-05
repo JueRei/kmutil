@@ -46,7 +46,6 @@ public var logMessage.logPath: String  // full path
 
 	}
 
-@OptIn(ExperimentalContracts::class)
 public inline fun <R> withLogMessage(id: String?, msgId: Char = ' ', vararg msgs: String, block: ()->R ): R {
 	contract {
 		callsInPlace(block, InvocationKind.EXACTLY_ONCE)
@@ -56,7 +55,6 @@ public inline fun <R> withLogMessage(id: String?, msgId: Char = ' ', vararg msgs
 	return block()
 }
 
-@OptIn(ExperimentalContracts::class)
 public inline fun <R> withLogMessage(msgId: Char = ' ', vararg msgs: String, block: ()->R ): R {
 	contract {
 		callsInPlace(block, InvocationKind.EXACTLY_ONCE)

@@ -14,7 +14,6 @@ import kotlin.time.toDuration
  * check if it is already mounted if not unmount it at end of script via onExitRunCmds list
  * @return mountStatus: Boolean
  */
-@OptIn(ExperimentalTime::class)
 public actual fun mountDir(dirName: String, userName: String, password: String): Boolean {
 	var ok = false
 	system("mount | grep \"on $dirName \"", 5.toDuration(DurationUnit.SECONDS)) { line, lineFrom, _ ->

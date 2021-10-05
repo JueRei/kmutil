@@ -24,7 +24,6 @@ import de.rdvsb.kmapi.*
  * no scripts supported no arg globbing done
  * @return the called process exit value
  */
-@OptIn(ExperimentalTime::class)
 public actual fun runBinary(cmd: String, timeout: kotlin.time.Duration): Int {
 	logMessage('I', "run: $cmd")
 
@@ -34,7 +33,7 @@ public actual fun runBinary(cmd: String, timeout: kotlin.time.Duration): Int {
 	val process = processBuilder.start()
 
 	if (timeout.isFinite()) {
-		process.waitFor(timeout.toLongMilliseconds(), TimeUnit.MILLISECONDS)
+		process.waitFor(timeout.inWholeMilliseconds, TimeUnit.MILLISECONDS)
 	} else {
 		process.waitFor()
 	}
@@ -64,7 +63,6 @@ private suspend fun InputStream.processLineSuspending(process: KmProcess, readFr
  * **Note**: the processLine callback is called concurrently from two different threads
  * @return the called process exit value
  */
-@OptIn(ExperimentalTime::class)
 public actual fun system(cmd: String, timeout: Duration, processLine: (line: String, lineFrom: LineFrom, process: KmProcess) -> Unit): Int {
 
 	logMessage('I', "system: $cmd")
@@ -89,7 +87,7 @@ public actual fun system(cmd: String, timeout: Duration, processLine: (line: Str
 		)
 
 		if (timeout.isFinite()) {
-			process.waitFor(timeout.toLongMilliseconds(), TimeUnit.MILLISECONDS)
+			process.waitFor(timeout.inWholeMilliseconds, TimeUnit.MILLISECONDS)
 		} else {
 			process.waitFor()
 		}
@@ -108,7 +106,6 @@ public actual fun system(cmd: String, timeout: Duration, processLine: (line: Str
  * stderr and stdout are written to current handles
  * @return the called process exit value
  */
-@OptIn(ExperimentalTime::class)
 public actual fun system(cmd: String, timeout: kotlin.time.Duration): Int {
 
 	logMessage('I', "system: $cmd")
@@ -119,7 +116,7 @@ public actual fun system(cmd: String, timeout: kotlin.time.Duration): Int {
 	val process = processBuilder.start()
 
 	if (timeout.isFinite()) {
-		process.waitFor(timeout.toLongMilliseconds(), TimeUnit.MILLISECONDS)
+		process.waitFor(timeout.inWholeMilliseconds, TimeUnit.MILLISECONDS)
 	} else {
 		process.waitFor()
 	}
