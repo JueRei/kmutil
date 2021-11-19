@@ -15,6 +15,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.runBlocking
 import kotlin.time.Duration
+import kotlin.time.DurationUnit
 import de.rdvsb.kmapi.*
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -87,7 +88,7 @@ public actual fun system(cmd: String, timeout: Duration, processLine: (line: Str
 		)
 
 		if (timeout.isFinite()) {
-			process.waitFor(timeout.inWholeMilliseconds, TimeUnit.MILLISECONDS)
+			process.waitFor(timeout.inWholeMilliseconds, DurationUnit.MILLISECONDS)
 		} else {
 			process.waitFor()
 		}

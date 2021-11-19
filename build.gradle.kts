@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "de.rdvsb"
-version = "0.1.12-SNAPSHOT"
+version = "0.1.13-SNAPSHOT"
 
 val ktor_version: String by project
 val kotlin_version: String by project
@@ -27,6 +27,15 @@ kotlin {
 	explicitApi()
 
 	//println("kotlin: ${kotlin.presets}")
+	targets.all {
+		compilations.all {
+			kotlinOptions {
+				allWarningsAsErrors = false
+				freeCompilerArgs += "-Xopt-in=kotlin.time.ExperimentalTime"
+				//freeCompilerArgs += "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi"
+			}
+		}
+	}
 
 	jvm {
 		withJava() // Includes Java sources into the JVM target’s compilations.
