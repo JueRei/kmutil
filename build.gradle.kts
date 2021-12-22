@@ -12,6 +12,7 @@ val logback_version: String by project
 val kotlin_coroutines_version: String by project
 val kotlin_serialization_version: String by project
 val kotlin_date_version: String by project
+val kmapi_version: String by project
 
 repositories {
 	mavenCentral()
@@ -55,7 +56,7 @@ kotlin {
 			dependencies {
 				implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version")
 				implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlin_date_version")
-				implementation("de.rdvsb:kmapi:0.+")
+				implementation("de.rdvsb:kmapi:$kmapi_version")
 			}
 		}
 		val commonTest by getting {
