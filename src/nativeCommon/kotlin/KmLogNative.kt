@@ -180,6 +180,8 @@ public actual object logMessage {
 					isLogToFile = true
 					this.isLogToFile.value = 1
 					if (!isQuiet) printFile(Stderr,"$msgTS I|log to $logPath\n")
+					if (!isQuiet) "$msgTS I|log to $path logDir=$logDir\n".let { m -> if (isLogToStdout) printFile(Stdout, m) else printFile(Stderr, m) }
+
 					printFile(logFh, "\n$msgTS =|TZ=$tzName\n$msgTS =|ENCODING=UTF-8\n")
 				}
 			}

@@ -134,7 +134,7 @@ public actual object logMessage {
 						logWriter = openLogFile(path, msgTS)
 					}
 
-					if (!isQuiet) System.err.print("$msgTS I|log to $path logDir=$logDir\n")
+					if (!isQuiet) "$msgTS I|log to $path logDir=$logDir\n".let { m -> if (isLogToStdout) System.out.print(m) else System.err.print(m) }
 
 				}
 			}
