@@ -64,6 +64,7 @@ public actual object logMessage {
 	public actual var countWarning: Int = 0
 	public actual var countError: Int = 0
 	public actual var countFatal: Int = 0
+	public actual var isLogToStdout: Boolean = false
 	public actual var isQuiet: Boolean = false
 
 	private fun openLogFile(path: String, msgTS: String): PrintWriter? {
@@ -148,7 +149,7 @@ public actual object logMessage {
 		}
 
 		val m = msgBuf.toString()
-		if (!isQuiet) System.err.print(m)
+		if (!isQuiet) if (isLogToStdout) System.out.print(m) else System.err.print(m)
 		logWriter?.run {
 			print(m)
 			flush()

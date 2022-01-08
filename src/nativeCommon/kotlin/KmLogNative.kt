@@ -99,6 +99,13 @@ public actual object logMessage {
 			_countFatal.value = value
 		}
 
+	private val _isLogToStdout = AtomicInt(0)
+	public actual var isLogToStdout: Boolean
+		get() = _isLogToStdout.value != 0
+		set(value) {
+			_isLogToStdout.value = if (value) 1 else 0
+		}
+
 	private val _isQuiet = AtomicInt(0)
 	public actual var isQuiet: Boolean
 		get() = _isQuiet.value != 0
@@ -187,7 +194,7 @@ public actual object logMessage {
 		}
 
 		val m = msgBuf.toString()
-		if (!isQuiet) printFile(Stderr, m)
+		if (!isQuiet) if (isLogToStdout) printFile(Stdout, m) else printFile(Stderr, m)
 		if (isLogToFile) printFile(logFh, m)
 
 		return true;

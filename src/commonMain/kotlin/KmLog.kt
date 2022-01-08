@@ -23,7 +23,8 @@ public expect object logMessage {
 	public var countWarning: Int
 	public var countError: Int
 	public var countFatal: Int
-	public var isQuiet: Boolean // don't emit log messages to stderr
+	public var isLogToStdout: Boolean // emit log to stdout instead of stderr
+	public var isQuiet: Boolean // don't emit log messages to stderr/stdout
 	public operator fun invoke(id: String?, msgId: Char = ' ', vararg msgs: String): Boolean
 	public operator fun invoke(msgId: Char = ' ', vararg msgs: String): Boolean
 }
