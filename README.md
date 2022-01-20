@@ -2,14 +2,18 @@
 Provide some useful classes and functions for Kotlin multiplatform utilities 
 Based on de.rdvsb.kmapi
 
-## Preliminary version 0.1.15
+## Preliminary version 0.1.16
+### 0.1.16
+ * logMessage.isStdWithTimestamp: Boolean // emit log to stdout/stderr with timestamp
+ * de.rdvsb.kmapi.File renamed to de.rdvsb.kmapi.KmFile
+
 ### parts working (using kmutil and kmapi):
 
 | Module | Common | JVM | NativeLinux | NativeMingw |
 | :---   | :---:  | :---: | :---: | :---: |
 | Args | x | x | x | x |
 | logMessage | x | x | x | x |
-| File | x | x | x | x |
+| KmFile | x | x | x | x |
 | InputStream | x | x | - | - |
 | OutputStream | x | x | - | - |
 | KmProcess | x | x | - | - |

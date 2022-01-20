@@ -12,7 +12,7 @@ import de.rdvsb.kmapi.*
 import kotlin.time.ExperimentalTime
 
 internal class FileJvmTest {
-	private val tstFile = File("/tmp/x.x")
+	private val tstFile = KmFile("/tmp/x.x")
 	private val f = java.io.File("/tmp/x1.x")
 
 //	val x = tstFile.bufferedWriter()

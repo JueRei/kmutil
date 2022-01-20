@@ -17,7 +17,7 @@ import de.rdvsb.kmapi.*
  */
 public expect fun mountDir(dirName: String, userName: String = "", password: String = ""): Boolean
 
-public fun File.rotateRename(lastOldVersion: Int = 9): Unit {
+public fun KmFile.rotateRename(lastOldVersion: Int = 9): Unit {
 	var path = absolutePath
 	var pathBase = path
 	var ext = ""
@@ -29,8 +29,8 @@ public fun File.rotateRename(lastOldVersion: Int = 9): Unit {
 	}
 
 	for (n in lastOldVersion downTo 0) {
-		val olderFile = File("$pathBase#${n.toFmt("%02d")}$ext")
-		val newerFile = if (n == 0) File(path) else  File("$pathBase#${(n-1).toFmt("%02d")}$ext")
+		val olderFile = KmFile("$pathBase#${n.toFmt("%02d")}$ext")
+		val newerFile = if (n == 0) KmFile(path) else  KmFile("$pathBase#${(n-1).toFmt("%02d")}$ext")
 
 		olderFile.exists() && olderFile.delete()
 		newerFile.exists() && newerFile.renameTo(olderFile)

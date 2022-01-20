@@ -8,7 +8,7 @@ package de.rdvsb.kmutil
 import de.rdvsb.kmapi.*
 
 public open class IniProperties() {
-	public var iniFile: File? = null
+	public var iniFile: KmFile? = null
 	/**
 	 * values read from INI
 	 *
@@ -112,7 +112,7 @@ public open class IniProperties() {
 		return this
 	}
 
-	public fun parse(iniFile: File, parsedLineAction: ((section: String?, property: String?, value: String?, line: String) -> Unit)? = null): Unit {
+	public fun parse(iniFile: KmFile, parsedLineAction: ((section: String?, property: String?, value: String?, line: String) -> Unit)? = null): Unit {
 		this.iniFile = iniFile
 		iniFile.forEachLine { iniLine ->
 			parseLine(iniLine) { section, property, value, line ->

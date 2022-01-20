@@ -5,7 +5,7 @@
 
 package de.rdvsb.kmutil
 
-import de.rdvsb.kmapi.File
+import de.rdvsb.kmapi.KmFile
 import de.rdvsb.kmapi.System
 
 /**
@@ -34,7 +34,7 @@ public open class BasicGetArgs {
 	public var appName: String = "app"
 		get() = field
 		set(value) {
-			val v = value.substringAfterLast(File.separatorChar).substringBeforeLast('.')
+			val v = value.substringAfterLast(KmFile.separatorChar).substringBeforeLast('.')
 			val changed =  field != v
 			field = v
 			if (changed) {

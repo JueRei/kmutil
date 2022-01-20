@@ -65,13 +65,14 @@ public actual object logMessage {
 	public actual var countError: Int = 0
 	public actual var countFatal: Int = 0
 	public actual var isLogToStdout: Boolean = false
+	public actual var isStdWithTimestamp: Boolean = true
 	public actual var isQuiet: Boolean = false
 
 	private fun openLogFile(path: String, msgTS: String): PrintWriter? {
 		logMessage('D', "openLogFile(path:$path) logDir=$logDir")
 		if (logDir != "*") {
 			try {
-				return PrintWriter(FileOutputStream(File(path), true), false)
+				return PrintWriter(FileOutputStream(KmFile(path), true), false)
 			} catch (e: Exception) {
 				System.err.print("$msgTS E|logMessage(): cannot open log file $path(logDir=\"$logDir\")\n")
 			}
@@ -83,7 +84,7 @@ public actual object logMessage {
 				logDir = dirName
 				//System.err.print("$msgTS D|logMessage(): try to write to \"$logName\" in dir \"$logDir\"\n")
 				try {
-					return PrintWriter(FileOutputStream(File(logPath), true), false)
+					return PrintWriter(FileOutputStream(KmFile(logPath), true), false)
 				} catch (e: Exception) {
 					// ignore
 				}
@@ -127,7 +128,7 @@ public actual object logMessage {
 					isLogToFile = true
 					path = logPath // dir location may have changed (chosen from logDirs)
 
-					var logFile = File(path)
+					var logFile = KmFile(path)
 					if (logFile.length() > maxLogSize) {
 						logWriter?.close()
 						logFile.rotateRename(maxLogVersion)
@@ -149,7 +150,13 @@ public actual object logMessage {
 		}
 
 		val m = msgBuf.toString()
-		if (!isQuiet) if (isLogToStdout) System.out.print(m) else System.err.print(m)
+		if (!isQuiet) {
+			if (isStdWithTimestamp) {
+				if (isLogToStdout) System.out.print (m) else System.err.print(m)
+			} else {
+				if (isLogToStdout) System.out.print (msg) else System.err.print(msg)
+			}
+		}
 		logWriter?.run {
 			print(m)
 			flush()

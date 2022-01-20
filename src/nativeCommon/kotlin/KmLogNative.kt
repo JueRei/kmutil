@@ -106,6 +106,13 @@ public actual object logMessage {
 			_isLogToStdout.value = if (value) 1 else 0
 		}
 
+	private val _isStdWithTimestamp = AtomicInt(0)
+	public actual var isStdWithTimestamp: Boolean
+		get() = _isStdWithTimestamp.value != 0
+		set(value) {
+			_isStdWithTimestamp.value = if (value) 1 else 0
+		}
+
 	private val _isQuiet = AtomicInt(0)
 	public actual var isQuiet: Boolean
 		get() = _isQuiet.value != 0
@@ -168,7 +175,7 @@ public actual object logMessage {
 				logFh = openLogFile(path, msgTS)
 				if (logFh != InvalidHandle) {
 					path = logPath // dir location may have changed (chosen from logDirs)
-					var logFile = File(path)
+					var logFile = KmFile(path)
 					if (logFile.length() > maxLogSize) {
 						closeFile(logFh)
 						logFile.rotateRename(maxLogVersion)
@@ -196,7 +203,13 @@ public actual object logMessage {
 		}
 
 		val m = msgBuf.toString()
-		if (!isQuiet) if (isLogToStdout) printFile(Stdout, m) else printFile(Stderr, m)
+		if (!isQuiet) {
+			if (isStdWithTimestamp) {
+				if (isLogToStdout) printFile(Stdout, m) else printFile(Stderr, m)
+			} else {
+				if (isLogToStdout) printFile(Stdout, msg) else printFile(Stderr, msg)
+			}
+		}
 		if (isLogToFile) printFile(logFh, m)
 
 		return true;

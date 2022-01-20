@@ -25,6 +25,7 @@ public expect object logMessage {
 	public var countFatal: Int
 	public var isLogToStdout: Boolean // emit log to stdout instead of stderr
 	public var isQuiet: Boolean // don't emit log messages to stderr/stdout
+	public var isStdWithTimestamp: Boolean // emit log to stdout/stderr with timestamp
 	public operator fun invoke(id: String?, msgId: Char = ' ', vararg msgs: String): Boolean
 	public operator fun invoke(msgId: Char = ' ', vararg msgs: String): Boolean
 }
@@ -33,13 +34,13 @@ public var logMessage.logPath: String  // full path
 	get() = when {
 		logName.isEmpty() -> ""
 		logDir.isEmpty()  -> logName
-		else              -> "${logDir}${File.separator}${logName}"
+		else              -> "${logDir}${KmFile.separator}${logName}"
 	}
 	set(value) {
-		val ix = value.lastIndexOf(File.separatorChar)
+		val ix = value.lastIndexOf(KmFile.separatorChar)
 		logDir = when {
 			ix < 0  -> ""
-			ix == 0 -> File.separator
+			ix == 0 -> KmFile.separator
 			else    -> value.substring(0, ix)
 		}
 		logName = value.substring(ix + 1)
