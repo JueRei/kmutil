@@ -69,7 +69,7 @@ public actual object logMessage {
 	public actual var isQuiet: Boolean = false
 
 	private fun openLogFile(path: String, msgTS: String): PrintWriter? {
-		logMessage('D', "openLogFile(path:$path) logDir=$logDir")
+		//logMessage('D', "openLogFile(path:$path) logDir=$logDir")
 		if (logDir != "*") {
 			try {
 				return PrintWriter(FileOutputStream(KmFile(path), true), false)
@@ -135,7 +135,7 @@ public actual object logMessage {
 						logWriter = openLogFile(path, msgTS)
 					}
 
-					if (!isQuiet) "$msgTS I|log to $path logDir=$logDir\n".let { m -> if (isLogToStdout) System.out.print(m) else System.err.print(m) }
+					if (!isQuiet) "${if (isStdWithTimestamp) "msgTS I|" else ""} log to $path logDir=$logDir".let { m -> if (isLogToStdout) System.out.println(m) else System.err.println(m) }
 
 				}
 			}
@@ -154,7 +154,7 @@ public actual object logMessage {
 			if (isStdWithTimestamp) {
 				if (isLogToStdout) System.out.print (m) else System.err.print(m)
 			} else {
-				if (isLogToStdout) System.out.print (msg) else System.err.print(msg)
+				if (isLogToStdout) System.out.println (msg) else System.err.println(msg)
 			}
 		}
 		logWriter?.run {
