@@ -95,11 +95,11 @@ public actual object logMessage {
 		return null
 	}
 
-	public actual operator fun invoke(id: String?, msgId: Char, vararg msgs: String): Boolean {
+	public actual operator fun invoke(ts: String?, id: String?, msgId: Char, msgSep: Char, msg: String): Boolean {
 		var useMsgId = msgId
 		when (msgId) {
 			' ' -> {
-				if (msgs.isEmpty()) {
+				if (msg.isEmpty()) {
 					logWriter?.println()
 					if (!isQuiet) System.err.println("")
 					return true
@@ -115,9 +115,9 @@ public actual object logMessage {
 				++countError
 			}
 		}
-
 		if (isQuiet && !isLogToFile) return true  // exit early if no output wanted
-		val msgTS = nowTS()
+
+		val msgTS = ts ?: if (isStdWithTimestamp) nowTS() else ""
 
 		if (isLogToFile && logWriter == null) {
 			var path = logPath
@@ -135,17 +135,16 @@ public actual object logMessage {
 						logWriter = openLogFile(path, msgTS)
 					}
 
-					if (!isQuiet) "${if (isStdWithTimestamp) "msgTS I|" else ""} log to $path logDir=$logDir".let { m -> if (isLogToStdout) System.out.println(m) else System.err.println(m) }
+					if (!isQuiet) "${if (isStdWithTimestamp) "msgTS I|" else ""}log to $path logDir=$logDir".let { m -> if (isLogToStdout) System.out.println(m) else System.err.println(m) }
 
 				}
 			}
 		}
 
 		val idStr = if (id.isNullOrEmpty()) "" else "$id|"
-		val msg = msgs.joinToString("")
 		val msgBuf = StringBuilder(msg.length + 128)
 		for ((i, line) in msg.splitToSequence("\n").withIndex()) {
-			val sep = if (i == 0) '|' else '+'
+			val sep = if (i == 0) msgSep else '+'
 			msgBuf.append(msgTS, ' ', useMsgId, sep, idStr, line, '\n')
 		}
 
@@ -165,6 +164,31 @@ public actual object logMessage {
 		return true
 	}
 
+	public actual operator fun invoke(id: String?, msgId: Char, vararg msgs: String): Boolean {
+
+		if (isQuiet && !isLogToFile) return true  // exit early if no output wanted
+		val msgTS = if (isStdWithTimestamp) nowTS() else ""
+
+		val msg = msgs.joinToString("")
+
+		return invoke(msgTS, id, msgId, '|', msg)
+
+	}
+
 	public actual operator fun invoke(msgId: Char, vararg msgs: String): Boolean = invoke(null, msgId, *msgs)
 
+}
+
+// also handle prefix: logMessageNested('D', "cmd> 2022-03-30 17:51:00 I|getState Prod")
+private val tsRe = "^(.*?)(20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d)(?:\\.\\d*)?\\s([A-Za-z])([\\|+])(.*)".toRegex(option = RegexOption.DOT_MATCHES_ALL)
+
+/**
+ * try to extract a timestamp severity and separator from msg and use these to log the message
+ */
+public actual fun logMessageNested(id: String?, msgId: Char, msg: String): Boolean {
+	tsRe.matchEntire(msg)?.let { matchResult ->
+		val (prefix, orgTs, orgMsgId, orgSep, orgMsg) = matchResult.destructured
+		return logMessage(orgTs, id, orgMsgId.firstOrNull()?:'I', orgSep.firstOrNull()?:'|', "$prefix$orgMsg")
+	}
+	return logMessage(id, msgId, msg)
 }

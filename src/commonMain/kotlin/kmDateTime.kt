@@ -22,6 +22,21 @@ public fun String.parseUtcDateTimeOrNull(): Instant? = try {
 	null
 }
 
+//val dbTimestampFormater = java.time.format.DateTimeFormatterBuilder()
+//	.append(ISO_LOCAL_DATE)
+//	.appendLiteral(' ')
+//	.append(ISO_LOCAL_TIME)
+//	.toFormatter()
+//
+//
+//fun testCustomArg() {
+//	println(ISO_LOCAL_TIME.toString())
+//	println(JavaLocalDateTime.parse("2022-03-07 14:36:11.1", dbTimestampFormater).toKotlinLocalDateTime())
+//	println(JavaLocalDateTime.parse("2022-03-07 14:36", dbTimestampFormater).toKotlinLocalDateTime())
+//	println(JavaLocalDateTime.parse("2022-03-07 14:36:11.123456891", dbTimestampFormater).toKotlinLocalDateTime())
+//}
+
+
 public fun String.parseLocalDateTime(): Instant = replace(' ', 'T').toLocalDateTime().toInstant(TimeZone.currentSystemDefault())
 public fun String.parseLocalDateTimeOrNull(): Instant? = try {
 	parseLocalDateTime()

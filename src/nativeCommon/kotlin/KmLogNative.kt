@@ -31,6 +31,7 @@ public expect val tzName: String
 public actual object logMessage {
 	private val windowsLogDirs: Array<String> = arrayOf("C:\\Local\\Logs", "C:\\Local\\Log", "log", "", System.getenv("Temp")?:"-", System.getenv("Tmp")?:"-")
 	private val unixLogDirs: Array<String> = arrayOf("/var/log", "${System.getenv("HOME")?:"-"}/log", System.getenv("HOME")?:"-", "log", "/tmp", "")
+	private fun nowTS() = logDateFormatted(getTimeMillis())
 	private val logFileHandle = AtomicInt(InvalidHandle)
 	private val isLogToFile = AtomicInt(0) // false if logFileName is empty or logFileHandle could not be opened
 
@@ -139,14 +140,14 @@ public actual object logMessage {
 		return InvalidHandle
 	}
 
-	public actual operator fun invoke(id: String?, msgId: Char, vararg msgs: String): Boolean {
+	public actual operator fun invoke(ts: String?, id: String?, msgId: Char, msgSep: Char, msg: String): Boolean {
 		var logFh = logFileHandle.value
 		var isLogToFile: Boolean = (isLogToFile.value != 0)
 		var useMsgId = msgId
 
 		when (msgId) {
 			' ' -> {
-				if (msgs.isEmpty()) {
+				if (msg.isEmpty()) {
 					if (!isQuiet) printFile(Stderr, "")
 					if (logFh != InvalidHandle) printFile(logFh, "")
 					return true
@@ -164,8 +165,7 @@ public actual object logMessage {
 
 		if (isQuiet && !isLogToFile) return true  // exit early if no output wanted
 
-		val nowMillis = getTimeMillis()
-		val msgTS = logDateFormatted(nowMillis)
+		val msgTS = ts ?: if (isStdWithTimestamp) nowTS() else ""
 
 		if (isLogToFile && logFh == InvalidHandle) {
 			var path = logPath
@@ -186,7 +186,7 @@ public actual object logMessage {
 					logFileHandle.value = logFh
 					isLogToFile = true
 					this.isLogToFile.value = 1
-					if (!isQuiet) printFile(Stderr,"$msgTS I|log to $logPath\n")
+					if (!isQuiet) printFile(Stderr, "$msgTS I|log to $logPath\n")
 					if (!isQuiet) "$msgTS I|log to $path logDir=$logDir\n".let { m -> if (isLogToStdout) printFile(Stdout, m) else printFile(Stderr, m) }
 
 					printFile(logFh, "\n$msgTS =|TZ=$tzName\n$msgTS =|ENCODING=UTF-8\n")
@@ -195,11 +195,10 @@ public actual object logMessage {
 		}
 
 		val idStr = if (id.isNullOrEmpty()) "" else "$id|"
-		val msg = msgs.joinToString("")
 		val msgBuf = StringBuilder(msg.length + 128)
 		for ((i, line) in msg.splitToSequence("\n").withIndex()) {
 			val sep = if (i == 0) '|' else '+'
-			msgBuf.append(msgTS, ' ',  useMsgId, sep, idStr, line, '\n')
+			msgBuf.append(msgTS, ' ', useMsgId, sep, idStr, line, '\n')
 		}
 
 		val m = msgBuf.toString()
@@ -215,5 +214,30 @@ public actual object logMessage {
 		return true;
 	}
 
+	public actual operator fun invoke(id: String?, msgId: Char, vararg msgs: String): Boolean {
+
+		if (isQuiet && isLogToFile.value == 0) return true  // exit early if no output wanted
+		val msgTS = if (isStdWithTimestamp) nowTS() else ""
+
+		val msg = msgs.joinToString("")
+
+		return invoke(msgTS, id, msgId, '|', msg)
+
+	}
+
 	public actual operator fun invoke(msgId: Char, vararg msgs: String): Boolean = invoke(null, msgId, *msgs)
+}
+
+// also handle prefix: logMessageNested('D', "cmd> 2022-03-30 17:51:00 I|getState Prod")
+private val tsRe = "^(.*?)(20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d)(?:\\.\\d*)?\\s([A-Za-z])([\\|+])(.*)".toRegex(option = RegexOption.DOT_MATCHES_ALL)
+
+/**
+ * try to extract a timestamp severity and separator from msg and use these to log the message
+ */
+public actual fun logMessageNested(id: String?, msgId: Char, msg: String): Boolean {
+	tsRe.matchEntire(msg)?.let { matchResult ->
+		val (prefix, orgTs, orgMsgId, orgSep, orgMsg) = matchResult.destructured
+		return logMessage(orgTs, id, orgMsgId.firstOrNull()?:'I', orgSep.firstOrNull()?:'|', "$prefix$orgMsg")
+	}
+	return logMessage(id, msgId, msg)
 }

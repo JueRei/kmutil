@@ -2,7 +2,9 @@
 Provide some useful classes and functions for Kotlin multiplatform utilities 
 Based on de.rdvsb.kmapi
 
-## Preliminary version 0.1.16
+## Preliminary version 0.1.17
+### 0.1.17
+* logMessageNested(): Boolean // extract timestamp msgId and separator from msg (log stdout from an external command call)
 ### 0.1.16
  * logMessage.isStdWithTimestamp: Boolean // emit log to stdout/stderr with timestamp
  * de.rdvsb.kmapi.File renamed to de.rdvsb.kmapi.KmFile

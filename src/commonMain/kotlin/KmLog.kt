@@ -26,6 +26,7 @@ public expect object logMessage {
 	public var isLogToStdout: Boolean // emit log to stdout instead of stderr
 	public var isQuiet: Boolean // don't emit log messages to stderr/stdout
 	public var isStdWithTimestamp: Boolean // emit log to stdout/stderr with timestamp
+	public operator fun invoke(ts: String?, id: String?, msgId: Char = ' ', msgSep: Char = '|', msg: String): Boolean
 	public operator fun invoke(id: String?, msgId: Char = ' ', vararg msgs: String): Boolean
 	public operator fun invoke(msgId: Char = ' ', vararg msgs: String): Boolean
 }
@@ -64,5 +65,18 @@ public inline fun <R> withLogMessage(msgId: Char = ' ', vararg msgs: String, blo
 
 	logMessage(null, msgId, *msgs)
 	return block()
+}
+
+
+/**
+ * try to extract a timestamp severity and separator from msg and use these to log the message
+ */
+public expect fun logMessageNested(id: String?, msgId: Char, msg: String): Boolean
+
+/**
+ * try to extract a timestamp severity and separator from msg and use these to log the message
+ */
+public fun logMessageNested(msgId: Char = ' ', msg: String): Boolean {
+	return logMessageNested(null, msgId, msg)
 }
 
