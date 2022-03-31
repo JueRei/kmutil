@@ -180,14 +180,15 @@ public actual object logMessage {
 }
 
 // also handle prefix: logMessageNested('D', "cmd> 2022-03-30 17:51:00 I|getState Prod")
-private val tsRe = "^(.*?)(20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d)(?:\\.\\d*)?\\s([A-Za-z])([\\|+])(.*)".toRegex(option = RegexOption.DOT_MATCHES_ALL)
+private val tsRe = "^(.*?)(20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d)(\\.\\d*)?\\s([A-Za-z])([\\|+])(.*)".toRegex(option = RegexOption.DOT_MATCHES_ALL)
 
 /**
  * try to extract a timestamp severity and separator from msg and use these to log the message
  */
 public actual fun logMessageNested(id: String?, msgId: Char, msg: String): Boolean {
 	tsRe.matchEntire(msg)?.let { matchResult ->
-		val (prefix, orgTs, orgMsgId, orgSep, orgMsg) = matchResult.destructured
+		val (prefix, orgTsWhole, orgTsFrac, orgMsgId, orgSep, orgMsg) = matchResult.destructured
+		val orgTs = orgTsWhole + if (orgTsFrac.isEmpty()) ".000" else orgTsFrac.padEnd(4, '0').take(4)
 		return logMessage(orgTs, id, orgMsgId.firstOrNull()?:'I', orgSep.firstOrNull()?:'|', "$prefix$orgMsg")
 	}
 	return logMessage(id, msgId, msg)
