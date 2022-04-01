@@ -5,7 +5,6 @@
 
 package de.rdvsb.kmutil
 import de.rdvsb.kmapi.*
-import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
@@ -69,14 +68,33 @@ public inline fun <R> withLogMessage(msgId: Char = ' ', vararg msgs: String, blo
 
 
 /**
- * try to extract a timestamp severity and separator from msg and use these to log the message
+ * try to extract a timestamp severity and separator from single line msg and use these to log the message
  */
-public expect fun logMessageNested(id: String?, msgId: Char, msg: String): Boolean
+public expect fun logMessageNestedLine(id: String?, msgId: Char, msg: String): Boolean
 
 /**
- * try to extract a timestamp severity and separator from msg and use these to log the message
+ * try to extract a timestamp severity and separator from single line msg and use these to log the message
  */
-public fun logMessageNested(msgId: Char = ' ', msg: String): Boolean {
-	return logMessageNested(null, msgId, msg)
+public fun logMessageNestedLine(msgId: Char = ' ', msg: String): Boolean {
+	return logMessageNestedLine(null, msgId, msg)
 }
 
+/**
+ * try to extract a timestamp severity and separator from possibly multiline msg and use these to log the message
+ */
+public fun logMessageNested(id: String?, msgId: Char, msg: String): Boolean {
+	msg.splitToSequence("\n").forEach {
+		logMessageNestedLine(id, msgId, it)
+	}
+	return true
+}
+
+/**
+ * try to extract a timestamp severity and separator from possibly multiline msg and use these to log the message
+ */
+public fun logMessageNested(msgId: Char, msg: String): Boolean {
+	msg.splitToSequence("\n").forEach {
+		logMessageNestedLine(null, msgId, it)
+	}
+	return true
+}

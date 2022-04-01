@@ -135,7 +135,7 @@ public actual object logMessage {
 						logWriter = openLogFile(path, msgTS)
 					}
 
-					if (!isQuiet) "${if (isStdWithTimestamp) "msgTS I|" else ""}log to $path logDir=$logDir".let { m -> if (isLogToStdout) System.out.println(m) else System.err.println(m) }
+					if (!isQuiet) "${if (isStdWithTimestamp) "$msgTS I|" else ""}log to $path logDir=$logDir".let { m -> if (isLogToStdout) System.out.println(m) else System.err.println(m) }
 
 				}
 			}
@@ -185,7 +185,7 @@ private val tsRe = "^(.*?)(20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d:\\d\\d)(\\.\\d*)
 /**
  * try to extract a timestamp severity and separator from msg and use these to log the message
  */
-public actual fun logMessageNested(id: String?, msgId: Char, msg: String): Boolean {
+public actual fun logMessageNestedLine(id: String?, msgId: Char, msg: String): Boolean {
 	tsRe.matchEntire(msg)?.let { matchResult ->
 		val (prefix, orgTsWhole, orgTsFrac, orgMsgId, orgSep, orgMsg) = matchResult.destructured
 		val orgTs = orgTsWhole + if (orgTsFrac.isEmpty()) ".000" else orgTsFrac.padEnd(4, '0').take(4)
