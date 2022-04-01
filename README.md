@@ -2,7 +2,9 @@
 Provide some useful classes and functions for Kotlin multiplatform utilities 
 Based on de.rdvsb.kmapi
 
-## Preliminary version 0.1.19
+## Preliminary version 0.1.2
+### 0.1.20
+* added tag parameter to logMessageNested(): Boolean
 ### 0.1.19
 * logMessageNestedLine(): Boolean // extract timestamp msgId and separator from single line msg (log stdout from an external command call)
 * logMessageNested(): Boolean // extract timestamp msgId and separator from possibly multiline msg (log stdout from an external command call)

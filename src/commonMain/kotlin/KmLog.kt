@@ -81,20 +81,22 @@ public fun logMessageNestedLine(msgId: Char = ' ', msg: String): Boolean {
 
 /**
  * try to extract a timestamp severity and separator from possibly multiline msg and use these to log the message
+ * @param tag each line is prefixed with it
  */
-public fun logMessageNested(id: String?, msgId: Char, msg: String): Boolean {
+public fun logMessageNested(id: String?, msgId: Char, tag: String = "", msg: String): Boolean {
 	msg.splitToSequence("\n").forEach {
-		logMessageNestedLine(id, msgId, it)
+		logMessageNestedLine(id, msgId, if (tag.isEmpty()) it else tag+it)
 	}
 	return true
 }
 
 /**
  * try to extract a timestamp severity and separator from possibly multiline msg and use these to log the message
+ * @param tag each line is prefixed with it
  */
-public fun logMessageNested(msgId: Char, msg: String): Boolean {
+public fun logMessageNested(msgId: Char, tag: String = "", msg: String): Boolean {
 	msg.splitToSequence("\n").forEach {
-		logMessageNestedLine(null, msgId, it)
+		logMessageNestedLine(null, msgId, if (tag.isEmpty()) it else tag+it)
 	}
 	return true
 }
