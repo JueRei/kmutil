@@ -8,3 +8,26 @@ package de.rdvsb.kmutil
 import de.rdvsb.kmapi.*
 
 
+/**
+ * Pads the collection to the specified size [minSize] at the end with the specified [padWith] value.
+ *
+ * @param minSize the desired minimum List size.
+ * @param padWith the value to pad collection with, if it has size less than the [minSize] specified.
+ * @return Returns a List of size at least [minSize] consisting of the content of `this` collection appended with [padWith] as many times
+ * as is necessary to reach that size.
+ *
+ * e.g. ` "a=b".split("=", 2).padEnd(2, "")`
+ */
+public fun <T> Collection<T>.padEnd(minSize: Int, padWith: T): List<T> {
+	if (this.size >= minSize) return this.toList()
+	val result = ArrayList<T>(minSize)
+	if (this.size == 0) {
+		result.fill(padWith)
+	} else {
+		result.addAll(this)
+		result.add(padWith)
+		while (result.size < minSize) result.add(padWith)
+	}
+	return result
+}
+
