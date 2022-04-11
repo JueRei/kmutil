@@ -5,16 +5,28 @@
 
 package de.rdvsb.kmutil
 
-import kotlin.test.*
-import kotlin.test.assertFalse
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 internal class UtilCommonTest {
 
 	@Test
-	fun xxxTest() {
-		println("UtilCommonTest.xxxTest start on ${ticAsDateTime()}")
+	fun collectionPadTest() {
+		println("UtilCommonTest.collectionPadTest start")
 
+		val l1 = emptyList<String>().padEnd(3, ".")
+		assertEquals(3, l1.size)
+		assertEquals("...", l1.joinToString(""))
+		val l2 = "a=b".split("=").padEnd(2, "")
+		val (a2, b2) = l2
+		assertEquals(2, l2.size)
+		assertEquals("a=b", "$a2=$b2")
 
-		println("UtilCommonTest.xxxTest end")
+		val l3 = "a:b".split("=").padEnd(2, "")
+		val (a3, b3) = l3
+		assertEquals(2, l3.size)
+		assertEquals("a:b=", "$a3=$b3")
+
+		println("UtilCommonTest.collectionPadTest start")
 	}
 }

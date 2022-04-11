@@ -21,13 +21,8 @@ import de.rdvsb.kmapi.*
 public fun <T> Collection<T>.padEnd(minSize: Int, padWith: T): List<T> {
 	if (this.size >= minSize) return this.toList()
 	val result = ArrayList<T>(minSize)
-	if (this.size == 0) {
-		result.fill(padWith)
-	} else {
-		result.addAll(this)
-		result.add(padWith)
-		while (result.size < minSize) result.add(padWith)
-	}
+	if (this.size > 0) result.addAll(this)
+	repeat (minSize - result.size) { result.add(padWith) }
 	return result
 }
 
