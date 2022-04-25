@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "de.rdvsb"
-version = "0.1.21-SNAPSHOT"
+version = "0.1.22-SNAPSHOT"
 
 val ktor_version: String by project
 val kotlin_version: String by project
@@ -32,8 +32,8 @@ kotlin {
 		compilations.all {
 			kotlinOptions {
 				allWarningsAsErrors = false
-				freeCompilerArgs += "-Xopt-in=kotlin.time.ExperimentalTime"
-				//freeCompilerArgs += "-Xopt-in=kotlinx.serialization.ExperimentalSerializationApi"
+				freeCompilerArgs += "-opt-in=kotlin.time.ExperimentalTime"
+				//freeCompilerArgs += "-opt-in=kotlinx.serialization.ExperimentalSerializationApi"
 			}
 		}
 	}

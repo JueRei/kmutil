@@ -2,7 +2,7 @@
 Provide some useful classes and functions for Kotlin multiplatform utilities 
 Based on de.rdvsb.kmapi
 
-## Preliminary version 0.1.21
+## Preliminary version 0.1.22
 ### 0.1.21
 * added Collection<T>.padEnd(minSize: Int, padWith: T): List<T>
 ### 0.1.20
