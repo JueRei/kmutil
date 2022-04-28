@@ -36,9 +36,6 @@ internal class DateTimeCommonTest {
 //		assertTrue(tstFile.name.startsWith("x.x"))
 //		assertTrue(tstFile.path.startsWith("..${KmFile.separatorChar}"))
 
-		println("DateTimeCommonTest.dateTime end")
-
-
 		var dur = 12.34567.toDuration(DurationUnit.SECONDS)
 		println("dur=$dur 0:${dur.toString(0)} 1:${dur.toString(1)} 2:${dur.toString(2)} 10.${dur.toString(10)}")
 		assertEquals("12s", dur.toString(0))
@@ -54,6 +51,14 @@ internal class DateTimeCommonTest {
 		dur = -123_456_789.34567.toDuration(DurationUnit.MICROSECONDS)
 		println("dur=$dur 0:${dur.toString(0)} 1:${dur.toString(1)} 2:${dur.toString(2)} 10.${dur.toString(10)}")
 		assertEquals("-(2m 3.4s)", dur.toString(1))
+
+		assertEquals("12:53".parseHHMM(), (12*60+53).toDuration(DurationUnit.MINUTES))
+		assertEquals("12:53:54".parseHHMM(), (12*3600+53*60+54).toDuration(DurationUnit.SECONDS))
+
+		assertEquals("50:58".parseMMSS(), (50*60+58).toDuration(DurationUnit.SECONDS))
+		assertEquals("12:51:59".parseMMSS(), (12*3600+51*60+59).toDuration(DurationUnit.SECONDS))
+
+		println("DateTimeCommonTest.dateTime end")
 	}
 
 }

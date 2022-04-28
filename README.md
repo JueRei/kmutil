@@ -5,6 +5,9 @@ Based on de.rdvsb.kmapi
 ## Preliminary version 0.1.23
 ### 0.1.23
 * added Collection<T>.padStart(minSize: Int, padWith: T): List<T>
+* added String.parseMMSS(): Duration?
+* added String.parseHHMM(): Duration?
+
 ### 0.1.21
 * added Collection<T>.padEnd(minSize: Int, padWith: T): List<T>
 ### 0.1.20

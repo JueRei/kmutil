@@ -7,12 +7,18 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.sign
 import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 //public expect fun ticAsDateTime(millis: Long? = null): String
 //public expect fun Long.ticAsDateTime(): String
-public fun ticAsDateTime(millis: Long? = null): String =Instant.fromEpochMilliseconds(millis ?: System.currentTimeMillis()).toLocalDateTime(TimeZone.currentSystemDefault()).toString().replace('T', ' ')
+public fun ticAsDateTime(millis: Long? = null): String =
+	Instant.fromEpochMilliseconds(millis ?: System.currentTimeMillis()).toLocalDateTime(TimeZone.currentSystemDefault()).toString().replace('T', ' ')
+
 public fun Long.ticAsDateTime(): String = ticAsDateTime(this)
-public fun ticAsDateTimeUtc(millis: Long? = null): String = Instant.fromEpochMilliseconds(millis ?: System.currentTimeMillis()).toLocalDateTime(TimeZone.UTC).toString().replace('T', ' ')
+public fun ticAsDateTimeUtc(millis: Long? = null): String =
+	Instant.fromEpochMilliseconds(millis ?: System.currentTimeMillis()).toLocalDateTime(TimeZone.UTC).toString().replace('T', ' ')
+
 public fun Long.ticAsDateTimeUtc(): String = ticAsDateTimeUtc(this)
 
 public fun String.parseUtcDateTime(): Instant = replace(' ', 'T').toLocalDateTime().toInstant(TimeZone.UTC)
@@ -36,13 +42,13 @@ public fun String.parseUtcDateTimeOrNull(): Instant? = try {
 //	println(JavaLocalDateTime.parse("2022-03-07 14:36:11.123456891", dbTimestampFormater).toKotlinLocalDateTime())
 //}
 
-
 public fun String.parseLocalDateTime(): Instant = replace(' ', 'T').toLocalDateTime().toInstant(TimeZone.currentSystemDefault())
 public fun String.parseLocalDateTimeOrNull(): Instant? = try {
 	parseLocalDateTime()
 } catch (e: Exception) {
 	null
 }
+
 public fun Instant.toDateTime(): String = toLocalDateTime(TimeZone.currentSystemDefault()).let { it.toString().replace('T', ' ') + if (it.second == 0) ":00" else "" }
 public fun Instant.toUtcDateTime(): String = toLocalDateTime(TimeZone.UTC).let { it.toString().replace('T', ' ') + if (it.second == 0) ":00" else "" }
 
@@ -72,3 +78,33 @@ public fun Duration.toString(maxDecimals: Int): String =
 			this
 		}
 	}
+
+private val hhmmssRe = """\d?\d:\d\d(?::\d\d)?$""".toRegex()
+
+/**
+ * parse "[HH:]MM:SS" into a duration
+ */
+public fun String.parseMMSS(): Duration? = when {
+	isBlank()         -> null
+
+	matches(hhmmssRe) -> {
+		val (hh, mm, ss) = split(":", limit = 3).map { it.toIntOrNull() ?: 0 }.padStart(3, 0)
+		(hh * 3600 + mm * 60 + ss).toDuration(DurationUnit.SECONDS)
+	}
+
+	else              -> null
+}
+
+/**
+ * parse "HH:MM[:SS]" into a duration
+ */
+public fun String.parseHHMM(): Duration? = when {
+	isBlank()         -> null
+
+	matches(hhmmssRe) -> {
+		val (hh, mm, ss) = split(":", limit = 3).map { it.toIntOrNull() ?: 0 }.padEnd(3, 0)
+		(hh * 3600 + mm * 60 + ss).toDuration(DurationUnit.SECONDS)
+	}
+
+	else              -> null
+}
