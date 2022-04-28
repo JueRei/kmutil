@@ -26,3 +26,21 @@ public fun <T> Collection<T>.padEnd(minSize: Int, padWith: T): List<T> {
 	return result
 }
 
+/**
+ * Pads the collection to the specified size [minSize] at the beginning with the specified [padWith] value.
+ *
+ * @param minSize the desired minimum List size.
+ * @param padWith the value to pad collection with, if it has size less than the [minSize] specified.
+ * @return Returns a List of size at least [minSize] consisting of the content of `this` collection prepended with [padWith] as many times
+ * as is necessary to reach that size.
+ *
+ * e.g. ` "01:02:12".split(":", 3).padStart(3, "0")`
+ */
+public fun <T> Collection<T>.padStart(minSize: Int, padWith: T): List<T> {
+	if (this.size >= minSize) return this.toList()
+	val result = ArrayList<T>(minSize)
+	repeat (minSize - this.size) { result.add(padWith) }
+	if (this.size > 0) result.addAll(this)
+	return result
+}
+

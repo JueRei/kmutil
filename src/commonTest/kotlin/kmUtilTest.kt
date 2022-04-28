@@ -14,19 +14,38 @@ internal class UtilCommonTest {
 	fun collectionPadTest() {
 		println("UtilCommonTest.collectionPadTest start")
 
-		val l1 = emptyList<String>().padEnd(3, ".")
-		assertEquals(3, l1.size)
-		assertEquals("...", l1.joinToString(""))
-		val l2 = "a=b".split("=").padEnd(2, "")
-		val (a2, b2) = l2
-		assertEquals(2, l2.size)
-		assertEquals("a=b", "$a2=$b2")
+		if (true) {
+			val l = emptyList<String>().padEnd(3, ".")
+			assertEquals(3, l.size)
+			assertEquals("...", l.joinToString(""))
+		}
+		if (true) {
+			val l = "a=b".split("=").padEnd(2, "")
+			val (a, b) = l
+			assertEquals(2, l.size)
+			assertEquals("a=b", "$a=$b")
+		}
 
-		val l3 = "a:b".split("=").padEnd(2, "")
-		val (a3, b3) = l3
-		assertEquals(2, l3.size)
-		assertEquals("a:b=", "$a3=$b3")
+		if (true) {
+			val l = "a:b".split("=").padEnd(2, "")
+			val (a, b) = l
+			assertEquals(2, l.size)
+			assertEquals("a:b=", "$a=$b")
+		}
 
-		println("UtilCommonTest.collectionPadTest start")
+		if (true) {
+			val l = "01:02:03".split(":").padStart(3, "0")
+			val (hh, mm, ss) = l
+			assertEquals(3, l.size)
+			assertEquals("01:02:03", "$hh:$mm:$ss")
+		}
+		if (true) {
+			val l = "01:02".split(":").padStart(3, "00")
+			val (hh, mm, ss) = l
+			assertEquals(3, l.size)
+			assertEquals("00:01:02", "$hh:$mm:$ss")
+		}
+
+		println("UtilCommonTest.collectionPadTest end")
 	}
 }
