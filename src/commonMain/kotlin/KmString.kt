@@ -99,3 +99,18 @@ public fun <T> T.fmtMetric(unit: String, fWidth: Int = 0, prec: Int = 1, metricP
 	fmt.append(unit)
 	return fmt.toString().sprintf(d)
 }
+
+/**
+ * Returns an abbreviated version of the String, of the specified [maxLen] and with [appendIfLonger] appended if the current String is longer than the specified [maxLen]
+ * otherwise, returns the original String without [appendIfLonger].
+ * The returned string will never be longer than [maxLen]
+ *
+ * @param maxLen maximum length of returned string.
+ * @param appendIfLonger append this if string is longer.
+ *
+ */
+public fun String.abbreviate(maxLen: Int, appendIfLonger: String = "..."): String {
+	if (length <= maxLen) return this
+	if (appendIfLonger.length >= maxLen) return appendIfLonger.substring(0, maxLen)
+	return substring(0, maxLen - appendIfLonger.length) + appendIfLonger
+}

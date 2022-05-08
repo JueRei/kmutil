@@ -18,7 +18,7 @@ internal class StringCommonTest {
 		assertEquals("1.2", 1.2345.toFmt("%1.1f"))
 		assertEquals("1.3", 1.2645.toFmt("%1.1f"))
 
-		println("StringCommonTest.fmtTest start")
+		println("StringCommonTest.fmtTest end")
 	}
 
 	@Test
@@ -228,4 +228,22 @@ internal class StringCommonTest {
 
 		println("StringCommonTest.fmtMetricTest end")
 	}
+
+	@Test
+	fun strTest() {
+		println("StringCommonTest.strTest start")
+
+		val hello = "Hello World Of Sol"
+		assertEquals(hello, hello.abbreviate(100))
+		assertEquals(hello, hello.abbreviate(hello.length))
+		assertEquals( "Hello...", hello.abbreviate(8))
+		assertEquals( "Hello (cut)", hello.abbreviate(11, " (cut)"))
+		assertEquals( "...", hello.abbreviate(3))
+		assertEquals( "..", hello.abbreviate(2))
+		assertEquals( ".", hello.abbreviate(1))
+		assertEquals( "", hello.abbreviate(0))
+
+		println("StringCommonTest.strTest end")
+	}
+
 }

@@ -2,13 +2,15 @@
 Provide some useful classes and functions for Kotlin multiplatform utilities 
 Based on de.rdvsb.kmapi
 
-## Preliminary version 0.1.23
+## Preliminary version 0.1.24
+
+### 0.1.24
+* added String.abbreviate((maxLen: Int, appendIfLonger: String = "...")
 ### 0.1.23
 * added Collection<T>.padStart(minSize: Int, padWith: T): List<T>
 * added String.parseMMSS(): Duration?
 * added String.parseHHMM(): Duration?
-
-### 0.1.21
+``### 0.1.21
 * added Collection<T>.padEnd(minSize: Int, padWith: T): List<T>
 ### 0.1.20
 * added tag parameter to logMessageNested(): Boolean
