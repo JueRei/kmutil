@@ -7,6 +7,7 @@ package de.rdvsb.kmutil
 
 import kotlin.time.ExperimentalTime
 import de.rdvsb.kmapi.*
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * split a command line string into multiple arguments like the shell but without globbing support
@@ -71,7 +72,13 @@ public fun String.splitShellArgs(): List<String> {
  */
 public expect fun runBinary(cmd: String, timeout: kotlin.time.Duration = kotlin.time.Duration.INFINITE): Int
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-public enum class LineFrom {OUT, ERR}
+
+/**
+ * indicator for processLine() lambda to distinguish the source of a line (stdout/stderr of called sub process)
+ * EOP is called once when the subprocess has ended, so exit code from the supplied KmProcess parameter
+ * the line parameter is an empty string on EOP
+ */
+public enum class LineFrom {OUT, ERR, EOP}
 
 /**
  * run via shell so globbing and command grouping or chaining with semicolons is supported
@@ -82,6 +89,16 @@ public enum class LineFrom {OUT, ERR}
  * @return the called process exit value
  */
 public expect fun system(cmd: String, timeout: kotlin.time.Duration = kotlin.time.Duration.INFINITE, processLine: (line: String, lineFrom: LineFrom, process: KmProcess) -> Unit): Int
+
+/**
+ * pipe data through a shell process so globbing and command grouping or chaining with semicolons is supported
+ * stdin of called shell is connected to returned OutputStream
+ * stderr and stdout are captured and a supplied callback function is called for each captured stdin/stderr line
+ *
+ * **Note**: the processLine callback is called concurrently from two different threads
+ * @return an OutputStream which is connected to stdin of called shell
+ */
+public expect suspend fun CoroutineScope.pipeSystem(cmd: String, timeout: kotlin.time.Duration = kotlin.time.Duration.INFINITE, processLine: (line: String, lineFrom: LineFrom, process: KmProcess) -> Unit): de.rdvsb.kmapi.OutputStream
 
 /**
  * run via shell so globbing and command grouping or chaining with semicolons is supported

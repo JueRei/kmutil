@@ -30,7 +30,7 @@ internal class FileJvmTest {
 		println("  fileName=\"${tstFile.name}\" f=\"${f.name}\", tst=${tstFile.absoluteFile.path}")
 		assertTrue(tstFile.name.startsWith("x.x"))
 
-		println("FileJvmTest.fileName end")
+		println("FileJvmTest.fileName stop")
 
 	}
 
@@ -38,7 +38,7 @@ internal class FileJvmTest {
 	fun walkDirTest() {
 		println("FileJvmTest.walkDirTest start")
 
-		println("FileJvmTest.walkDirTest end")
+		println("FileJvmTest.walkDirTest stop")
 	}
 
 }

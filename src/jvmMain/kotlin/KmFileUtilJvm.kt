@@ -22,7 +22,11 @@ public actual fun mountDir(dirName: String, userName: String, password: String):
 	}
 	var ok = false
 	system("mount | grep \"on $dirName \"", 5.toDuration(DurationUnit.SECONDS)) { line, lineFrom, _ ->
-		val msgId = if (lineFrom == LineFrom.OUT) 'I' else 'E'
+		val msgId = when (lineFrom) {
+			LineFrom.OUT -> 'I'
+			LineFrom.ERR -> 'E'
+			LineFrom.EOP -> return@system
+		}
 		logMessage(msgId, "mountDir1> $line")
 		if (line.contains("on $dirName ")) ok = true
 	}
@@ -30,7 +34,11 @@ public actual fun mountDir(dirName: String, userName: String, password: String):
 
 	ok = false
 	system("mount $dirName; sleep 1; mount | grep \"on $dirName \"", 300.toDuration(DurationUnit.SECONDS)) { line, lineFrom, _ ->
-		val msgId = if (lineFrom == LineFrom.OUT) 'I' else 'E'
+		val msgId = when (lineFrom) {
+			LineFrom.OUT -> 'I'
+			LineFrom.ERR -> 'E'
+			LineFrom.EOP -> return@system
+		}
 		logMessage(msgId, "mountDir2> $line")
 		if (line.contains("on $dirName ")) ok = true
 	}

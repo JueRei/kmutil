@@ -9,14 +9,11 @@ import java.io.InputStream
 import java.util.concurrent.TimeUnit
 import java.io.FileOutputStream
 import java.nio.channels.FileLock
-import kotlin.time.ExperimentalTime
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.runBlocking
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 import de.rdvsb.kmapi.*
+import kotlinx.coroutines.*
+import kotlin.coroutines.coroutineContext
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -79,6 +76,7 @@ public actual fun system(cmd: String, timeout: Duration, processLine: (line: Str
 	val process = KmProcess(processBuilder.start())
 
 	runBlocking {  // this expression blocks the main thread
+		val x = this
 		val awaits = listOf(
 			//Exception in thread "main" java.lang.ClassCastException: java.lang.UNIXProcess cannot be cast to de.rdvsb.kmapi.Process
 			//        at de.rdvsb.kmutil.KmProcJvmKt$system$1$awaits$1.invokeSuspend(KmProcJvm.kt:73)
@@ -95,9 +93,52 @@ public actual fun system(cmd: String, timeout: Duration, processLine: (line: Str
 
 		if (process.isAlive) process.destroyForcibly()
 		awaits.awaitAll()
+		processLine("", LineFrom.EOP, process)
 	}
 
 	return process.exitValue()
+}
+
+/**
+ * Unix: run via shell so globbing and command grouping or chaining with semicolons is supported
+ * Windows run via cmd.exe so globbing and command grouping or chaining with semicolons is **NOT** supported
+ * stdin is inherited from current process
+ * stderr and stdout are captured and a supplied callback function is called for each captured stdin/stderr line
+ *
+ * **Note**: the processLine callback is called concurrently from two different threads
+ * @return the called process exit value
+ */
+public actual suspend fun CoroutineScope.pipeSystem(cmd: String, timeout: kotlin.time.Duration, processLine: (line: String, lineFrom: LineFrom, process: KmProcess) -> Unit): de.rdvsb.kmapi.OutputStream {
+	logMessage('I', "pipeSystem: $cmd")
+
+	val processBuilder = if (de.rdvsb.kmapi.System.isWindows) {
+		ProcessBuilder("cmd.exe", "/c", "($cmd & exit)")
+	} else {
+		ProcessBuilder("sh", "-c", cmd)
+	}
+
+	val process = KmProcess(processBuilder.start())
+
+		val streamAwaits = listOf(
+			//Exception in thread "main" java.lang.ClassCastException: java.lang.UNIXProcess cannot be cast to de.rdvsb.kmapi.Process
+			//        at de.rdvsb.kmutil.KmProcJvmKt$system$1$awaits$1.invokeSuspend(KmProcJvm.kt:73)
+			//
+			async(Dispatchers.IO) { process.errorStream.processLineSuspending(process, LineFrom.ERR, processLine) },
+			async(Dispatchers.IO) { process.inputStream.processLineSuspending(process, LineFrom.OUT, processLine) },
+		)
+		async(Dispatchers.IO) {
+			if (timeout.isFinite()) {
+				process.waitFor(timeout.inWholeMilliseconds, DurationUnit.MILLISECONDS)
+			} else {
+				process.waitFor()
+			}
+			streamAwaits.awaitAll()
+			if (process.isAlive) process.destroyForcibly()
+			processLine("", LineFrom.EOP, process)
+		}
+
+
+	return process.outputStream
 }
 
 

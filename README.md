@@ -2,7 +2,11 @@
 Provide some useful classes and functions for Kotlin multiplatform utilities 
 Based on de.rdvsb.kmapi
 
-## Preliminary version 0.1.24
+## Preliminary version 0.2.1
+
+### 0.2.1
+* added KmProc.pipeSystem()
+* added KmProc system()/pipeSystem() make last call to processLine() with LineFrom.EOP (EndOfProcess) 
 
 ### 0.1.24
 * added String.abbreviate((maxLen: Int, appendIfLonger: String = "...")

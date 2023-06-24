@@ -14,6 +14,6 @@ internal class UtilJvmTest {
 		println("UtilJvmTest.collectionPadTest start")
 
 
-		println("UtilJvmTest.collectionPadTest start")
+		println("UtilJvmTest.collectionPadTest stop")
 	}
 }

@@ -20,5 +20,6 @@ internal class KmLogKtTest {
 		logMessageNested('D', "ssh>","2022-02-21 18:00:33.12356 F|Error occurred:this is a multiline test\n2022-02-21 18:00:33.124 F+  the second line")
 
 		println("StringCommonTest.logTest start warnings=${logMessage.countWarning} errors=${logMessage.countError} fatal=${logMessage.countFatal}")
+		println("StringCommonTest.logTest stop")
 	}
 }

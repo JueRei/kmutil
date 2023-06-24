@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "de.rdvsb"
-version = "0.1.25-SNAPSHOT"
+version = "0.2.1"
 
 val ktor_version: String by project
 val kotlin_version: String by project
