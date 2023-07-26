@@ -2,7 +2,7 @@
 Provide some useful classes and functions for Kotlin multiplatform utilities 
 Based on de.rdvsb.kmapi
 
-## Preliminary version 0.2.1
+## Preliminary version 0.2.2
 
 ### 0.2.1
 * added KmProc.pipeSystem()
